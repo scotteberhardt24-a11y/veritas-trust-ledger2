@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy:        #020f2e;
+  --navy-light:  #0a1933;
+  --navy-mid:    #071228;
+  --gold:        #c9a84c;
+  --gold-light:  #f0c040;
+  --cyan:        #06b6d4;
+  --cyan-light:  #22d3ee;
+  --text:        #e8f0ff;
+  --text-muted:  #6b8cce;
+  --text-dim:    #3a5080;
+  --card-border: rgba(255,255,255,0.06);
+}
+
+html { color-scheme: dark; }
+
+body {
+  background: var(--navy);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--navy);
+}

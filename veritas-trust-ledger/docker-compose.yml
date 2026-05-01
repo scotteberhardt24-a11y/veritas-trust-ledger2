@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    container_name: veritas_postgres
+    environment:
+      POSTGRES_USER: veritas
+      POSTGRES_PASSWORD: strongpassword
+      POSTGRES_DB: veritas
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+  api:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_URL: postgresql://veritas:strongpassword@db:5432/veritas
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      PORT: 4000
+      JWT_SECRET: change-me-in-production
+      NODE_ENV: development
+volumes:
+  postgres_data:

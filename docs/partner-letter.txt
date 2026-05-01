@@ -1,0 +1,77 @@
+VERITAS NETWORK — PARTNER LETTER
+==================================
+[Customize the bracketed sections per recipient]
+
+
+Dear [Name / Partnership Team at PLATFORM],
+
+I'll keep this short — I know you receive a lot of outreach.
+
+We built something that solves a problem your users have been dealing with since the platform launched, and we'd like to offer it to you at no cost to integrate.
+
+
+THE PROBLEM YOUR USERS HAVE
+----------------------------
+Right now, when a contractor or tradesperson lists a service on [PLATFORM], the person hiring them has no reliable way to verify who they're dealing with. Reviews can be faked. Profiles can be new. There's no neutral payment protection if a dispute comes up. This creates friction, reduces completed transactions, and — when things go wrong — lands squarely on your support team.
+
+We hear from workers constantly: "I've done 200 jobs and have zero way to prove it to a new client." We hear from clients: "I don't know who I'm hiring until it's too late."
+
+
+WHAT WE'RE OFFERING
+--------------------
+Veritas is a trust and escrow layer that sits alongside your platform. Here's what integrating with us gives your users:
+
+  TruScore Display
+  Workers on [PLATFORM] can link their Veritas account and display a verified TruScore on their listing. It shows jobs completed, success rate, and earned badges — all cryptographically verified, none of it self-reported. Your users see a green shield on verified profiles. No engineering work required on your end beyond a single API call.
+
+  Badge Verification
+  Every Veritas badge has a unique serial number. Any partner site — including [PLATFORM] — can verify a badge in real time via a single API endpoint:
+    GET https://api.veritas.network/api/badges/verify/[SERIAL]
+  Returns verified: true/false in under 100ms. No subscription required for basic verification.
+
+  Escrow as a Service (Optional)
+  For listings where payment is involved, we can serve as the neutral escrow holder. Client pays us, we hold the funds, release them when both parties confirm the work is done. [PLATFORM] stays the advertising and discovery layer — we handle the money. You take no payment risk. We share a portion of the transaction fee with you as a referral.
+
+  "Sign in with Veritas" (Optional)
+  Workers can use their Veritas account to sign into [PLATFORM], carrying their verified reputation with them on first login. Reduces friction for new worker onboarding on your side, and instantly gives you verified identity on every new account.
+
+
+WHAT THIS COSTS YOU
+--------------------
+The TruScore display widget and badge verification API are free to integrate. There is no licensing fee, no revenue share required, and no engineering commitment beyond adding two lines of HTML to a listing template.
+
+The escrow and Sign-in integrations involve a brief API setup (typically 1–2 days of engineering time) and a revenue share on escrow volume, which we are happy to discuss.
+
+
+WHY IT'S GOOD FOR [PLATFORM]
+-----------------------------
+  · Increased listing quality — verified workers stand out, which improves the signal-to-noise ratio on your platform
+  · Reduced disputes — escrow-protected transactions have a built-in resolution mechanism before they become your problem
+  · Better conversion — clients who can verify who they're hiring are more likely to complete a transaction
+  · Zero risk — we are not a competitor. We do not have listings, we do not have a marketplace, we do not take your users. We are infrastructure.
+
+
+WHERE WE ARE
+------------
+Veritas is live. The web app, mobile app (iOS/Android), ledger, and escrow system are all built and operational. We have [X] workers on our waitlist and are onboarding our first partner platforms now.
+
+We are reaching out to [PLATFORM] first because your platform has the largest concentration of skilled trades and service listings in the US, and because we believe the fit is the most natural. We'd like to be your escrow and trust partner — not one of ten options, but the default.
+
+
+NEXT STEP
+---------
+If any part of this is interesting, the fastest path forward is a 20-minute call. I'll show you the live product, walk through the integration, and answer whatever questions you have.
+
+No commitment, no pitch deck required. Just a conversation.
+
+[Your Name]
+Founder, Veritas Network
+[Email] · [Phone]
+veritas.network/partners
+
+---
+To see a live demo of the TruScore widget:
+  veritas.network/widget-demo
+
+To test the badge verification API:
+  curl https://api.veritas.network/api/badges/verify/VTX-DEMO-1YR-TEST1

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Veritas username is reserved</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background-color: #010b20; font-family: Georgia, 'Times New Roman', serif; color: #e8eaf6; }
+  .wrapper { max-width: 580px; margin: 0 auto; padding: 40px 20px; }
+  .card { background: linear-gradient(135deg, #071435 0%, #051a4a 100%); border-radius: 20px; border: 1px solid #0e2050; overflow: hidden; }
+  .header { background: linear-gradient(135deg, #020f2e, #0a2560); padding: 40px 40px 32px; text-align: center; border-bottom: 1px solid #0c1e45; }
+  .logo-ring { width: 64px; height: 64px; border-radius: 50%; border: 2.5px solid #c9a84c; background: #020f2e; display: inline-flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 900; color: #c9a84c; margin-bottom: 16px; }
+  .brand { color: #c9a84c; font-size: 13px; font-weight: 700; letter-spacing: 4px; margin-bottom: 0; }
+  .body { padding: 36px 40px; }
+  .greeting { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  .username-display { background: #020f2e; border: 1px solid #c9a84c40; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0; }
+  .username-label { font-size: 11px; color: #4a5a80; letter-spacing: 2px; font-weight: 700; margin-bottom: 8px; font-family: Arial, sans-serif; }
+  .username-value { font-size: 28px; font-weight: 900; color: #c9a84c; font-family: 'Courier New', monospace; }
+  .username-serial { font-size: 10px; color: #4a5a80; margin-top: 6px; font-family: monospace; }
+  .body-text { color: #8a9ac0; font-size: 14px; line-height: 1.8; margin-bottom: 20px; font-family: Arial, sans-serif; }
+  .perk-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #0c1e45; }
+  .perk-icon { color: #c9a84c; font-size: 16px; flex-shrink: 0; width: 20px; }
+  .perk-text { color: #8a9ac0; font-size: 13px; font-family: Arial, sans-serif; line-height: 1.5; }
+  .perk-text strong { color: #e8eaf6; }
+  .cta-section { text-align: center; padding: 28px 0 8px; }
+  .cta-btn { display: inline-block; background: #c9a84c; color: #020f2e; text-decoration: none; border-radius: 999px; padding: 14px 36px; font-size: 15px; font-weight: 800; letter-spacing: 0.5px; font-family: Arial, sans-serif; }
+  .cta-sub { color: #4a5a80; font-size: 11px; margin-top: 10px; font-family: Arial, sans-serif; }
+  .divider { height: 1px; background: #0c1e45; margin: 24px 0; }
+  .share-section { text-align: center; }
+  .share-label { color: #4a5a80; font-size: 11px; font-family: Arial, sans-serif; letter-spacing: 1px; margin-bottom: 12px; }
+  .share-link { display: inline-block; background: #0c1e45; border: 1px solid #0e2050; border-radius: 999px; padding: 7px 16px; color: #8a9ac0; font-size: 12px; text-decoration: none; margin: 3px; font-family: Arial, sans-serif; }
+  .footer { padding: 24px 40px; border-top: 1px solid #0c1e45; text-align: center; }
+  .footer-text { color: #4a5a80; font-size: 11px; line-height: 1.7; font-family: Arial, sans-serif; }
+  .waitlist-position { background: #020f2e; border: 1px solid #00c89630; border-radius: 10px; padding: 14px 20px; text-align: center; margin: 20px 0; }
+  .position-num { font-size: 28px; font-weight: 900; color: #00c896; }
+  .position-label { font-size: 11px; color: #4a5a80; font-family: Arial, sans-serif; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="logo-ring">V</div>
+      <p class="brand">VERITAS NETWORK</p>
+    </div>
+
+    <!-- BODY -->
+    <div class="body">
+
+      <!-- Greeting — CUSTOMIZE: replace {FIRST_NAME} -->
+      <div class="greeting">You're in, {FIRST_NAME}.</div>
+      <p class="body-text">Your username is reserved on the Veritas Network. Nobody else can claim it. When we launch, it's yours — and with it, a TruScore that goes wherever you go.</p>
+
+      <!-- Username display — CUSTOMIZE: replace {USERNAME} and {SERIAL} -->
+      <div class="username-display">
+        <div class="username-label">YOUR RESERVED USERNAME</div>
+        <div class="username-value">@{USERNAME}</div>
+        <div class="username-serial">Reservation ID: VTX-RSVP-{SERIAL}</div>
+      </div>
+
+      <!-- Waitlist position — CUSTOMIZE: replace {POSITION} -->
+      <div class="waitlist-position">
+        <div class="position-num">#{POSITION}</div>
+        <div class="position-label">Your position on the founding waitlist</div>
+      </div>
+
+      <p class="body-text">Here's what being a founding member gets you that nobody else will ever get:</p>
+
+      <!-- Perks -->
+      <div style="margin-bottom: 20px;">
+        <div class="perk-row">
+          <span class="perk-icon">🛡️</span>
+          <div class="perk-text"><strong>Founder Badge — permanent.</strong> A serial-numbered badge on your profile marking you as a founding member of the network. It cannot be earned any other way, ever.</div>
+        </div>
+        <div class="perk-row">
+          <span class="perk-icon">⬡</span>
+          <div class="perk-text"><strong>TruScore head start.</strong> Founding members begin with a boosted starting score, reflecting your early commitment to the platform before the general public joins.</div>
+        </div>
+        <div class="perk-row">
+          <span class="perk-icon">⊛</span>
+          <div class="perk-text"><strong>Priority escrow access.</strong> You'll be in the first group to use our escrow system — meaning you can start building your verified job history from day one of launch.</div>
+        </div>
+        <div class="perk-row">
+          <span class="perk-icon">◈</span>
+          <div class="perk-text"><strong>Partner platform integrations.</strong> Your TruScore will be active on Craigslist, Angi, and Thumbtack at launch. Founding members are the first names those platforms will see.</div>
+        </div>
+        <div class="perk-row" style="border-bottom: none;">
+          <span class="perk-icon">💎</span>
+          <div class="perk-text"><strong>Reduced platform fees — forever.</strong> Founding members lock in a {FOUNDING_FEE_RATE}% escrow fee, lower than the standard rate we'll offer to users who join after launch.</div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-section">
+        <a href="https://veritas.network/claim" class="cta-btn">Share Your Spot — Move Up the List →</a>
+        <div class="cta-sub">Every person you refer moves you closer to the top of the launch queue</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Share links -->
+      <div class="share-section">
+        <div class="share-label">TELL YOUR CREW ABOUT VERITAS</div>
+        <a href="https://twitter.com/intent/tweet?text=I+just+claimed+@{USERNAME}+on+@VeritasNetwork+%E2%80%94+the+trust+layer+for+gig+workers.+Get+yours:+veritas.network/claim" class="share-link">Share on X</a>
+        <a href="https://veritas.network/claim" class="share-link">Copy Your Referral Link</a>
+        <a href="https://veritas.network/claim" class="share-link">Forward This Email</a>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <p class="footer-text">
+        Veritas Network · Trust, verified and portable.<br>
+        You're receiving this because you reserved a username at veritas.network<br><br>
+        <a href="#" style="color: #4a5a80;">Unsubscribe</a> · <a href="https://veritas.network" style="color: #4a5a80;">veritas.network</a>
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Pre-header / preview text (hidden) -->
+  <!-- Add this before <body> opens in your ESP: -->
+  <!-- @{USERNAME} is reserved on Veritas Network. Here's what you unlocked. -->
+
+</div>
+</body>
+</html>
+
+
+<!-- ================================================================
+CUSTOMIZATION GUIDE
+================================================================
+
+REQUIRED replacements before sending:
+  {FIRST_NAME}        → Recipient's first name (e.g., "Emma")
+  {USERNAME}          → Their claimed username (e.g., "emmaj")
+  {SERIAL}            → Auto-generated reservation ID (e.g., "9F3A-B7C2")
+  {POSITION}          → Their waitlist number (e.g., "2,847")
+  {FOUNDING_FEE_RATE} → Your founding member fee rate (e.g., "1.5")
+
+SUBJECT LINE OPTIONS (A/B test these):
+  A: @{USERNAME} is yours on Veritas — here's what you unlocked
+  B: You're #{POSITION} in line. Here's what founding members get.
+  C: The gig economy just got a trust layer. You're in.
+
+PREVIEW TEXT (shown in inbox before open):
+  Your username is reserved. Nobody else can take it.
+
+ESP NOTES:
+  Works in Mailchimp, SendGrid, Klaviyo, ConvertKit, and Postmark.
+  Test in Gmail, Apple Mail, and Outlook before sending at scale.
+  Plain-text version should be included for deliverability.
+
+================================================================ -->

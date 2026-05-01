@@ -1,0 +1,2 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = { content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'], theme: { extend: { colors: { navy: { DEFAULT: '#020f2e', light: '#0a1933', mid: '#071228' }, gold: { DEFAULT: '#c9a84c', light: '#f0c040' }, cyan: { DEFAULT: '#06b6d4', light: '#22d3ee' }, veritas: { bg: '#050e24', card: '#071228', border: 'rgba(255,255,255,0.06)' } }, fontFamily: { display: ['Cinzel', 'serif'], mono: ['DM Mono', 'monospace'], body: ['DM Sans', 'sans-serif'] } } }, plugins: [] }

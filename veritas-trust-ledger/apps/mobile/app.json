@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name":   "Veritas Trust Ledger",
+    "slug":   "veritas-trust-ledger",
+    "version":"1.0.0",
+    "scheme": "veritas",
+    "orientation": "portrait",
+    "icon":   "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image":          "./assets/splash.png",
+      "resizeMode":     "contain",
+      "backgroundColor":"#020f2e"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.veritas.trustledger",
+      "infoPlist": {
+        "UIBackgroundModes": ["fetch", "remote-notification"]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor":  "#020f2e"
+      },
+      "package": "com.veritas.trustledger",
+      "googleServicesFile": "./google-services.json",
+      "permissions": ["RECEIVE_BOOT_COMPLETED", "VIBRATE"]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#c9a84c"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": { "projectId": "YOUR_EAS_PROJECT_ID" }
+    }
+  }
+}

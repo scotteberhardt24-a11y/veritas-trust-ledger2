@@ -1,0 +1,19 @@
+{
+  "name": "veritas-trust-ledger",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Veritas Trust Ledger — transparent trust verification platform",
+  "scripts": {
+    "dev:backend": "pnpm --filter veritas-backend dev",
+    "dev:web": "pnpm --filter veritas-web dev",
+    "dev:mobile": "pnpm --filter veritas-mobile start",
+    "build:backend": "pnpm --filter veritas-backend build",
+    "build:web": "pnpm --filter veritas-web build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "clean": "find . -name node_modules -type d -exec rm -rf {} +"
+  },
+  "engines": { "node": ">=20.0.0" },
+  "packageManager": "pnpm@9.15.0",
+  "license": "MIT"
+}

@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS ledger_results (
+    id SERIAL PRIMARY KEY,
+    a INT NOT NULL,
+    b INT NOT NULL,
+    result TEXT NOT NULL,
+    iv TEXT NOT NULL,
+    tag TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

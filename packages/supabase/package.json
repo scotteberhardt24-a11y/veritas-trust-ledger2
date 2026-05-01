@@ -1,0 +1,9 @@
+{
+  "name": "@veritas/supabase",
+  "version": "1.0.0",
+  "main": "client.ts",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2"
+  }
+}

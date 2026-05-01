@@ -1,0 +1,5 @@
+<svg width="200" height="240" xmlns="http://www.w3.org/2000/svg">
+<rect x="10" y="10" width="180" height="220" rx="20" fill="#0B1F3A" stroke="#D4AF37" stroke-width="4"/>
+<text x="100" y="100" font-size="24" text-anchor="middle" fill="#D4AF37">Jobs Completed</text>
+<text x="100" y="140" font-size="18" text-anchor="middle" fill="#6EC1FF">50</text>
+</svg>

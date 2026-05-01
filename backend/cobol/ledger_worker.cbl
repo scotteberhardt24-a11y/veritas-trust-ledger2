@@ -1,0 +1,20 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. LEDGER-WORKER.
+
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 EVENT-LINE PIC X(512).
+
+       PROCEDURE DIVISION.
+
+       DISPLAY "COBOL Ledger Worker Started".
+
+       PERFORM UNTIL EVENT-LINE = "QUIT"
+
+           ACCEPT EVENT-LINE
+           DISPLAY "Processing Ledger Event:"
+           DISPLAY EVENT-LINE
+
+       END-PERFORM.
+
+       STOP RUN.

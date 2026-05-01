@@ -1,0 +1,5 @@
+<svg width="240" height="280" xmlns="http://www.w3.org/2000/svg">
+<rect x="10" y="10" width="220" height="260" rx="30" fill="#0B1F3A" stroke="#D4AF37" stroke-width="6"/>
+<text x="120" y="120" font-size="20" text-anchor="middle" fill="#D4AF37">Elite Badge 8</text>
+<text x="120" y="160" font-size="16" text-anchor="middle" fill="#6EC1FF">Custom</text>
+</svg>
