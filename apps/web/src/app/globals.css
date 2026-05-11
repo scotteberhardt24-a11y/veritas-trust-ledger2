@@ -52,3 +52,56 @@ body { background: var(--navy); color: var(--white); font-family: var(--font-bod
 .animate-fade-up { animation: fadeUp 0.4s ease forwards; }
 .animate-fade-up-2 { animation: fadeUp 0.4s ease 0.1s forwards; opacity: 0; }
 .animate-fade-up-3 { animation: fadeUp 0.4s ease 0.2s forwards; opacity: 0; }
+/* Veritas Custom Styles */
+.btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #00D4AA 0%, #00BF99 100%);
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, #FFB020 0%, #F59E0B 100%);
+  color: white;
+  border: none;
+}
+
+.btn-outline {
+  background: white;
+  border: 2px solid #E5E7EB;
+  color: #374151;
+}
+
+.v-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #E5E7EB;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.v-input:focus {
+  outline: none;
+  border-color: #00D4AA;
+}
+
+.v-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}

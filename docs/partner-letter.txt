@@ -75,3 +75,4 @@ To see a live demo of the TruScore widget:
 
 To test the badge verification API:
   curl https://api.veritas.network/api/badges/verify/VTX-DEMO-1YR-TEST1
+cd veritas-trust-ledger && unzip -o ~/Downloads/VERITAS-COMPLETE-UPGRADES.zip && cp upgrades/phase1-auth/authRoutes-ENHANCED.js backend/src/routes/authRoutes.js && cp upgrades/phase1-auth/auth-screens-ENHANCED.tsx apps/web/src/app/auth-screens.tsx && cp upgrades/phase3-ai/aiMatcher.js backend/src/services/aiMatcher.js && cp upgrades/phase6-ui/marketplace-ENHANCED.tsx apps/web/src/app/marketplace/page.tsx && mkdir -p apps/web/src/app/onboarding && cp upgrades/phase2-onboarding/worker-onboarding.tsx apps/web/src/app/onboarding/page.tsx && mkdir -p apps/web/src/app/admin && cp upgrades/phase5-admin/dashboard-ENHANCED.tsx apps/web/src/app/admin/page.tsx && echo "✅ INSTALLATION COMPLETE!"

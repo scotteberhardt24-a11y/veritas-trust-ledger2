@@ -1,8 +1,0 @@
-{
-  "build": {},
-  "deploy": {
-    "startCommand": "node src/server.js",
-    "healthcheckPath": "/api/health",
-    "healthcheckTimeout": 30
-  }
-}
