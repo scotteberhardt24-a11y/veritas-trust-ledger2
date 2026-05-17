@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { createWSServer } from "./ws.js";
+import { updateTrustScore } from "./trustEngine.js";
 
 // --------------------------
 // CONFIG
@@ -34,6 +35,7 @@ export async function startChainListener(wsBroadcast) {
   // JOB CREATED
   // --------------------------
   contract.on("JobCreated", (jobId, client, worker) => {
+    await updateTrustScore(worker, "JOB_CREATED");
     wsBroadcast("JOB_CREATED", {
       jobId: jobId.toString(),
       client,
@@ -55,6 +57,22 @@ export async function startChainListener(wsBroadcast) {
   // JOB COMPLETED
   // --------------------------
   contract.on("JobCompleted", (jobId) => {
+    const job = await db.query(
+  `
+  SELECT worker
+  FROM jobs
+  WHERE chain_job_id = $1
+`,
+  [jobId.toString()]
+);
+
+if (job.rows[0]) {
+  await updateTrustScore(
+    job.rows[0].worker,
+    "JOB_COMPLETED"
+  );
+}
+    await updateTrustScore(worker, "JOB_COMPLETED");
     wsBroadcast("JOB_COMPLETED", {
       jobId: jobId.toString(),
     });
@@ -64,6 +82,10 @@ export async function startChainListener(wsBroadcast) {
   // PAYMENT RELEASED
   // --------------------------
   contract.on("PaymentReleased", (jobId, worker) => {
+    await updateTrustScore(
+  worker,
+  "PAYMENT_RELEASED"
+);
     wsBroadcast("PAYMENT_RELEASED", {
       jobId: jobId.toString(),
       worker,
@@ -73,7 +95,22 @@ export async function startChainListener(wsBroadcast) {
   // --------------------------
   // DISPUTES
   // --------------------------
-  contract.on("JobDisputed", (jobId) => {
+    contract.on("JobDisputed", (jobId) => {const job = await db.query(
+  `
+  SELECT worker
+  FROM jobs
+  WHERE chain_job_id = $1
+`,
+  [jobId.toString()]
+);
+
+if (job.rows[0]) {
+  await updateTrustScore(
+    job.rows[0].worker,
+    "JOB_DISPUTED"
+  );
+}
+    await updateTrustScore(worker, "JOB_DISPUTED");
     wsBroadcast("JOB_DISPUTED", {
       jobId: jobId.toString(),
     });
