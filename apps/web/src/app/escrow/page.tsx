@@ -1,10 +1,170 @@
-'use client';
-import { useState } from 'react';
-import { useAuth } from '../layout';
-const ES=[{id:'VTL-8842',title:'Web Development Phase 2',worker:'Marcus T.',client:'You',amount:2400,status:'funded',created:'Apr 26',milestones:[{name:'Backend API',pct:100,done:true},{name:'Frontend UI',pct:60,done:false},{name:'Testing',pct:0,done:false}]},{id:'VTL-8841',title:'Logo Design Package',worker:'Aria S.',client:'You',amount:800,status:'released',created:'Apr 20',milestones:[{name:'Concepts',pct:100,done:true},{name:'Revisions',pct:100,done:true},{name:'Final Files',pct:100,done:true}]},{id:'VTL-8840',title:'Plumbing Repair',worker:'Bob K.',client:'You',amount:350,status:'disputed',created:'Apr 18',milestones:[{name:'Assessment',pct:100,done:true},{name:'Repair',pct:0,done:false}]}];
-export default function EscrowPage(){const{user}=useAuth();const[tab,setTab]=useState('all');const[sc,setSc]=useState(false);const filtered=tab==='all'?ES:ES.filter(e=>e.status===tab);const sc2=(s)=>({pending:'#94a3b8',funded:'#06b6d4',released:'#22c55e',disputed:'#ef4444'}[s]||'#94a3b8');const total=ES.reduce((s,e)=>s+e.amount,0);
-return(<div style={{maxWidth:1200}} className="animate-fade-up"><div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:24,flexWrap:'wrap',gap:12}}><div><h2 style={{fontFamily:'var(--font-display)',fontSize:24,marginBottom:4}}>Escrow</h2><p style={{color:'var(--muted)',fontSize:12}}>Secure milestone-based payments</p></div><button className="btn btn-gold" onClick={()=>setSc(!sc)}>{sc?'✕ Cancel':'+ New Escrow'}</button></div>
-<div style={{display:'flex',gap:14,marginBottom:24,flexWrap:'wrap'}}>{[{l:'Total Volume',v:'$'+total.toLocaleString(),i:'💰'},{l:'Active',v:String(ES.filter(e=>e.status==='funded').length),i:'🔒'},{l:'2.5% Fee',v:'$'+Math.round(total*0.025).toLocaleString(),i:'📊'},{l:'Success',v:'95%',i:'✅'}].map((s,i)=><div key={i} style={{flex:1,minWidth:140,background:'linear-gradient(135deg,rgba(7,20,53,0.95),rgba(5,26,74,0.8))',border:'1px solid rgba(6,182,212,0.12)',borderRadius:14,padding:'14px 16px'}}><div style={{fontSize:9,fontFamily:'var(--font-mono)',color:'var(--muted)',letterSpacing:'0.12em',marginBottom:6}}>{s.i} {s.l}</div><div style={{fontSize:22,fontWeight:900,fontFamily:'var(--font-mono)',color:'var(--white)'}}>{s.v}</div></div>)}</div>
-{sc&&<div style={{background:'linear-gradient(135deg,rgba(7,20,53,0.95),rgba(5,26,74,0.8))',border:'1px solid rgba(201,168,76,0.2)',borderRadius:16,padding:24,marginBottom:24}}><div style={{fontSize:14,fontFamily:'var(--font-display)',color:'var(--gold)',marginBottom:16}}>Create New Escrow</div><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,marginBottom:14}}><div><label className="v-label">Job Title</label><input className="v-input" placeholder="e.g. Website Redesign"/></div><div><label className="v-label">Amount ($)</label><input className="v-input" type="number" placeholder="1000"/></div></div><button className="btn btn-gold" style={{width:'100%',padding:'12px 0'}}>Fund Escrow →</button></div>}
-<div style={{display:'flex',gap:8,marginBottom:20}}>{['all','pending','funded','released','disputed'].map(t=><button key={t} onClick={()=>setTab(t)} style={{fontSize:11,padding:'6px 16px',borderRadius:999,border:'1px solid '+(tab===t?'var(--cyan)':'var(--border-2)'),background:tab===t?'rgba(6,182,212,0.1)':'transparent',color:tab===t?'var(--cyan)':'var(--muted)',cursor:'pointer',fontFamily:'var(--font-mono)',textTransform:'capitalize'}}>{t}</button>)}</div>
-<div style={{display:'grid',gap:16}}>{filtered.map(e=><div key={e.id} style={{background:'linear-gradient(135deg,rgba(7,20,53,0.9),rgba(5,26,74,0.7))',border:`1px solid ${sc2(e.status)}22`,borderRadius:16,padding:20}}><div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:14,flexWrap:'wrap',gap:12}}><div><div style={{fontSize:12,fontFamily:'var(--font-mono)',color:'var(--muted)',marginBottom:2}}>{e.id}</div><div style={{fontSize:15,fontWeight:600,marginBottom:4}}>{e.title}</div><div style={{fontSize:11,color:'var(--muted)'}}>👤 {e.worker} · 💼 {e.client} · 📅 {e.created}</div></div><div style={{textAlign:'right'}}><div style={{fontSize:22,fontWeight:800,fontFamily:'var(--font-mono)',color:'var(--gold-2)'}}>${e.amount.toLocaleString()}</div><span style={{fontSize:9,padding:'2px 10px',borderRadius:999,fontFamily:'var(--font-mono)',textTransform:'uppercase',background:sc2(e.status)+'15',border:`1px solid ${sc2(e.status)}33`,color:sc2(e.status)}}>{e.status}</span></div></div><div style={{borderTop:'1px solid var(--border)',paddingTop:12}}><div style={{fontSize:10,fontFamily:'var(--font-mono)',color:'var(--muted)',marginBottom:8,letterSpacing:'0.1em'}}>MILESTONES</div><div style={{display:'flex',gap:10,flexWrap:'wrap'}}>{e.milestones.map((m,i)=><div key={i} style={{flex:1,minWidth:100,background:'rgba(255,255,255,0.02)',border:'1px solid var(--border)',borderRadius:8,padding:'8px 10px'}}><div style={{fontSize:11,fontWeight:500,marginBottom:4}}>{m.done?'✅':'⏳'} {m.name}</div><div style={{height:4,background:'rgba(255,255,255,0.05)',borderRadius:2,overflow:'hidden'}}><div style={{height:'100%',width:m.pct+'%',background:m.done?'#22c55e':'#06b6d4',borderRadius:2}}/></div></div>)}</div></div>{e.status==='funded'&&<div style={{marginTop:12,display:'flex',gap:8}}><button className="btn btn-cyan" style={{fontSize:11,padding:'8px 20px'}}>Release Funds</button><button className="btn btn-outline" style={{fontSize:11,padding:'8px 20px',color:'#ef4444',borderColor:'rgba(239,68,68,0.3)'}}>Dispute</button></div>}</div>)}</div></div>);}
+"use client";
+
+import { useState } from "react";
+import Sidebar from "@/components/Sidebar";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { ESCROW_ADDRESS, abi } from "@/lib/escrow";
+import { createWalletClient, http } from "viem";
+import { localhost } from "viem/chains";
+
+export default function EscrowPage() {
+  const [jobId, setJobId] = useState(0);
+  const [worker, setWorker] = useState("");
+  const [amount, setAmount] = useState(0);
+
+  const walletClient = createWalletClient({
+    chain: localhost,
+    transport: http("http://127.0.0.1:8545"),
+  });
+
+  // -----------------------
+  // CREATE JOB
+  // -----------------------
+  async function createJob() {
+    await walletClient.writeContract({
+      address: ESCROW_ADDRESS as `0x${string}`,
+      abi,
+      functionName: "createJob",
+      args: [worker as `0x${string}`],
+    });
+  }
+
+  // -----------------------
+  // FUND JOB
+  // -----------------------
+  async function fundJob() {
+    await walletClient.writeContract({
+      address: ESCROW_ADDRESS as `0x${string}`,
+      abi,
+      functionName: "fundJob",
+      args: [BigInt(jobId), BigInt(amount)],
+    });
+  }
+
+  // -----------------------
+  // START WORK
+  // -----------------------
+  async function startWork() {
+    await walletClient.writeContract({
+      address: ESCROW_ADDRESS as `0x${string}`,
+      abi,
+      functionName: "startWork",
+      args: [BigInt(jobId)],
+    });
+  }
+
+  // -----------------------
+  // COMPLETE JOB
+  // -----------------------
+  async function completeJob() {
+    await walletClient.writeContract({
+      address: ESCROW_ADDRESS as `0x${string}`,
+      abi,
+      functionName: "completeJob",
+      args: [BigInt(jobId)],
+    });
+  }
+
+  // -----------------------
+  // RELEASE PAYMENT
+  // -----------------------
+  async function releasePayment() {
+    await walletClient.writeContract({
+      address: ESCROW_ADDRESS as `0x${string}`,
+      abi,
+      functionName: "releasePayment",
+      args: [BigInt(jobId)],
+    });
+  }
+
+  return (
+    <ProtectedRoute>
+      <div className="min-h-screen bg-black text-white flex">
+        <Sidebar />
+
+        <div className="flex-1 p-10">
+          <h1 className="text-5xl font-bold">
+            Escrow Control Center
+          </h1>
+
+          <p className="text-zinc-400 mt-4">
+            Manage job funding, execution, and payouts.
+          </p>
+
+          {/* JOB CREATION */}
+          <div className="mt-10 grid grid-cols-3 gap-4">
+            <input
+              placeholder="Worker address"
+              value={worker}
+              onChange={(e) =>
+                setWorker(e.target.value)
+              }
+              className="p-3 bg-white/5 border border-white/10 rounded-xl"
+            />
+
+            <button
+              onClick={createJob}
+              className="bg-cyan-500 text-black font-bold rounded-xl"
+            >
+              Create Job
+            </button>
+          </div>
+
+          {/* FUNDING */}
+          <div className="mt-10 grid grid-cols-3 gap-4">
+            <input
+              type="number"
+              placeholder="Job ID"
+              value={jobId}
+              onChange={(e) =>
+                setJobId(Number(e.target.value))
+              }
+              className="p-3 bg-white/5 border border-white/10 rounded-xl"
+            />
+
+            <input
+              type="number"
+              placeholder="Amount"
+              value={amount}
+              onChange={(e) =>
+                setAmount(Number(e.target.value))
+              }
+              className="p-3 bg-white/5 border border-white/10 rounded-xl"
+            />
+
+            <button
+              onClick={fundJob}
+              className="bg-green-500 text-black font-bold rounded-xl"
+            >
+              Fund Job
+            </button>
+          </div>
+
+          {/* ACTIONS */}
+          <div className="mt-10 grid grid-cols-4 gap-4">
+            <button
+              onClick={startWork}
+              className="bg-yellow-500 text-black font-bold rounded-xl p-3"
+            >
+              Start Work
+            </button>
+
+            <button
+              onClick={completeJob}
+              className="bg-blue-500 text-black font-bold rounded-xl p-3"
+            >
+              Complete
+            </button>
+
+            <button
+              onClick={releasePayment}
+              className="bg-purple-500 text-white font-bold rounded-xl p-3"
+            >
+              Release Payment
+            </button>
+          </div>
+        </div>
+      </div>
+    </ProtectedRoute>
+  );
+}

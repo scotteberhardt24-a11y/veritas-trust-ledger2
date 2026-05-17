@@ -13,7 +13,20 @@
     "test": "pnpm -r test",
     "clean": "find . -name node_modules -type d -exec rm -rf {} +"
   },
-  "engines": { "node": ">=20.0.0" },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "packageManager": "pnpm@9.15.0",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.6.1",
+    "ethers": "^6.16.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^4.0.11",
+    "@types/node": "^22.8.5",
+    "hardhat": "^3.4.5",
+    "typescript": "~5.8.0"
+  },
+  "type": "module"
 }

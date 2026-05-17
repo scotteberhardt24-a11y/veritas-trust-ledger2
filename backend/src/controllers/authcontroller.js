@@ -30,13 +30,7 @@ exports.register = async (req, res) => {
 
     if (!name || !email || !password) {
       return res.status(400).json({
-        error: "All required fields must be completed.",
-      });
-    }
-
-    if (password.length < 8) {
-      return res.status(400).json({
-        error: "Password must be at least 8 characters.",
+        error: "All fields are required.",
       });
     }
 
@@ -51,9 +45,13 @@ exports.register = async (req, res) => {
       });
     }
 
-    const passwordHash = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(
+      password,
+      12
+    );
 
-    const verifyToken = crypto.randomBytes(32).toString("hex");
+    const verificationToken =
+      crypto.randomBytes(32).toString("hex");
 
     const result = await db.query(
       `
@@ -72,9 +70,9 @@ exports.register = async (req, res) => {
       [
         name,
         email.toLowerCase(),
-        passwordHash,
+        hashedPassword,
         role || "worker",
-        verifyToken,
+        verificationToken,
       ]
     );
 
@@ -85,17 +83,12 @@ exports.register = async (req, res) => {
     return res.status(201).json({
       success: true,
       message:
-        "Account created successfully. Please verify your email.",
+        "Account created successfully.",
       token,
-      user: {
-        id: user.user_id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+      user,
     });
   } catch (err) {
-    console.error("REGISTER ERROR:", err);
+    console.error(err);
 
     return res.status(500).json({
       error: "Registration failed.",
@@ -112,7 +105,8 @@ exports.login = async (req, res) => {
 
     if (!email || !password) {
       return res.status(400).json({
-        error: "Email and password are required.",
+        error:
+          "Email and password are required.",
       });
     }
 
@@ -127,16 +121,18 @@ exports.login = async (req, res) => {
 
     if (result.rows.length === 0) {
       return res.status(401).json({
-        error: "No account found with this email.",
+        error:
+          "No account found with this email.",
       });
     }
 
     const user = result.rows[0];
 
-    const validPassword = await bcrypt.compare(
-      password,
-      user.password_hash
-    );
+    const validPassword =
+      await bcrypt.compare(
+        password,
+        user.password_hash
+      );
 
     if (!validPassword) {
       return res.status(401).json({
@@ -150,17 +146,10 @@ exports.login = async (req, res) => {
       success: true,
       message: "Login successful.",
       token,
-      user: {
-        id: user.user_id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        tier: user.tier,
-        truscore: user.truscore,
-      },
+      user,
     });
   } catch (err) {
-    console.error("LOGIN ERROR:", err);
+    console.error(err);
 
     return res.status(500).json({
       error: "Login failed.",
@@ -172,21 +161,7 @@ exports.me = async (req, res) => {
   try {
     const result = await db.query(
       `
-      SELECT
-        user_id,
-        name,
-        email,
-        role,
-        tier,
-        truscore,
-        serial,
-        jobs_completed,
-        success_rate,
-        avg_rating,
-        balance,
-        total_earned,
-        is_verified,
-        avatar_url
+      SELECT *
       FROM users
       WHERE user_id=$1
       `,
@@ -201,10 +176,11 @@ exports.me = async (req, res) => {
 
     return res.json(result.rows[0]);
   } catch (err) {
-    console.error("ME ERROR:", err);
+    console.error(err);
 
     return res.status(500).json({
-      error: "Failed to load profile.",
+      error:
+        "Failed to fetch profile.",
     });
   }
 };
