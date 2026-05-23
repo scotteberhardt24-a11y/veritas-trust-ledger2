@@ -1,11 +1,10 @@
-import './globals.css';
+import "./globals.css";
 import Providers from "./providers";
-import { AuthProvider } from "@/context/AuthContext";
+import type { Metadata } from "next";
 
-
-export const metadata = {
-  title: 'Veritas Trust Ledger',
-  description: 'Decentralized trust infrastructure',
+export const metadata: Metadata = {
+  title: "Veritas Trust Ledger",
+  description: "Future trust infrastructure for the gig economy",
 };
 
 export default function RootLayout({
@@ -16,10 +15,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-  <Providers>
-    <AuthProvider>{children}</AuthProvider>
-  </Providers>
-</body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

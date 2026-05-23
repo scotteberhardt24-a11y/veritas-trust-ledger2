@@ -5,29 +5,34 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
+const cookieParser = require("cookie-parser");
+const compression = require("compression");
+
 const http = require("http");
 const { Server } = require("socket.io");
 
-// Route imports
-const ledgerRoutes = require("./routes/ledgerRoutes");
-const stripeRoutes = require("./routes/stripeRoutes");
+// ROUTES
 const authRoutes = require("./routes/authRoutes");
+const healthRoutes = require("./routes/healthRoutes");
 const trustRoutes = require("./routes/trustRoutes");
 const escrowRoutes = require("./routes/escrowRoutes");
 const jobRoutes = require("./routes/jobRoutes");
+const contractRoutes = require("./routes/contractRoutes");
+const ledgerRoutes = require("./routes/ledgerRoutes");
+const stripeRoutes = require("./routes/stripeRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
-const healthRoutes = require("./routes/healthRoutes");
-
-// v2 routes
 const adminRoutes = require("./routes/adminRoutes");
 const passportRoutes = require("./routes/passportRoutes");
 const referralRoutes = require("./routes/referralRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const marketplaceRoutes = require("./routes/marketplaceRoutes");
 
-// Controllers
+// CONTROLLERS
 const { getFeed } = require("./controllers/claimController");
+
+// SOCKET SERVICE
+const { setIO } = require("./services/socketService");
 
 const app = express();
 const server = http.createServer(app);
@@ -45,29 +50,47 @@ const io = new Server(server, {
   },
 });
 
-// Make socket.io accessible in routes/controllers
-app.set("io", io);
+// make io globally accessible
+setIO(io);
 
 io.on("connection", (socket) => {
   console.log(`⚡ Socket connected: ${socket.id}`);
 
+  // USER ROOM
   socket.on("join:user", (userId) => {
     socket.join(`user:${userId}`);
-    console.log(`→ ${socket.id} joined user:${userId}`);
+
+    console.log(
+      `👤 Socket ${socket.id} joined user room: user:${userId}`
+    );
   });
 
+  // ESCROW ROOM
   socket.on("join:escrow", (escrowId) => {
     socket.join(`escrow:${escrowId}`);
-    console.log(`→ ${socket.id} joined escrow:${escrowId}`);
+
+    console.log(
+      `💰 Socket ${socket.id} joined escrow room: escrow:${escrowId}`
+    );
   });
 
+  // CHAT ROOM
+  socket.on("join:chat", (chatId) => {
+    socket.join(`chat:${chatId}`);
+
+    console.log(
+      `💬 Socket ${socket.id} joined chat room: chat:${chatId}`
+    );
+  });
+
+  // DISCONNECT
   socket.on("disconnect", () => {
-    console.log(`⚡ Socket disconnected: ${socket.id}`);
+    console.log(`❌ Socket disconnected: ${socket.id}`);
   });
 });
 
 /* =========================================================
-   SECURITY + CORE MIDDLEWARE
+   MIDDLEWARE
 ========================================================= */
 
 app.use(helmet());
@@ -79,6 +102,10 @@ app.use(
   })
 );
 
+app.use(compression());
+
+app.use(cookieParser());
+
 app.use(
   morgan(
     process.env.NODE_ENV === "production"
@@ -87,36 +114,19 @@ app.use(
   )
 );
 
-/* =========================================================
-   STRIPE WEBHOOK
-   MUST COME BEFORE express.json()
-========================================================= */
-
+// Stripe webhook RAW parser BEFORE express.json
 app.use(
   "/api/stripe/webhook",
   express.raw({ type: "application/json" })
 );
 
-/* =========================================================
-   BODY PARSER
-========================================================= */
+// JSON parser
+app.use(express.json({ limit: "10mb" }));
 
-app.use(
-  express.json({
-    limit: "10mb",
-  })
-);
+// URL encoded parser
+app.use(express.urlencoded({ extended: true }));
 
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
-
-/* =========================================================
-   RATE LIMITING
-========================================================= */
-
+// RATE LIMITER
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 200,
@@ -127,16 +137,14 @@ const limiter = rateLimit({
 app.use("/api", limiter);
 
 /* =========================================================
-   ROOT ROUTE
+   HEALTH CHECK
 ========================================================= */
 
 app.get("/", (req, res) => {
-  res.status(200).json({
+  res.json({
     success: true,
-    name: "Veritas Trust Ledger API",
-    version: "1.0.0",
-    environment: process.env.NODE_ENV || "development",
-    status: "online",
+    message: "Veritas Trust Ledger API",
+    status: "running",
   });
 });
 
@@ -145,25 +153,34 @@ app.get("/", (req, res) => {
 ========================================================= */
 
 app.use("/api/health", healthRoutes);
+
 app.use("/api/auth", authRoutes);
+
 app.use("/api/trust", trustRoutes);
+
 app.use("/api/escrow", escrowRoutes);
+
 app.use("/api/jobs", jobRoutes);
+
+app.use("/api/contracts", contractRoutes);
+
 app.use("/api/messages", messageRoutes);
+
 app.use("/api/notifications", notificationRoutes);
+
 app.use("/api/ledger", ledgerRoutes);
+
 app.use("/api/stripe", stripeRoutes);
 
-// v2 routes
 app.use("/api/admin", adminRoutes);
-app.use("/api/passport", passportRoutes);
-app.use("/api/referrals", referralRoutes);
-app.use("/api/upload", uploadRoutes);
-app.use("/api/marketplace", marketplaceRoutes);
 
-/* =========================================================
-   FEED ROUTE
-========================================================= */
+app.use("/api/passport", passportRoutes);
+
+app.use("/api/referrals", referralRoutes);
+
+app.use("/api/upload", uploadRoutes);
+
+app.use("/api/marketplace", marketplaceRoutes);
 
 app.get("/api/feed", getFeed);
 
@@ -185,7 +202,8 @@ app.use((req, res) => {
 ========================================================= */
 
 app.use((err, req, res, next) => {
-  console.error("❌ Unhandled error:", err);
+  console.error("❌ SERVER ERROR:");
+  console.error(err);
 
   res.status(err.status || 500).json({
     success: false,
@@ -201,17 +219,16 @@ app.use((err, req, res, next) => {
 ========================================================= */
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log("\n🛡 Veritas Trust Ledger API");
-  console.log("================================");
-  console.log(`🚀 Server:      http://localhost:${PORT}`);
-  console.log(`🌎 Environment: ${process.env.NODE_ENV || "development"}`);
-  console.log(`⚡ Socket.IO:   enabled`);
-  console.log("================================\n");
+  console.log("\n======================================");
+  console.log("🛡 VERITAS TRUST LEDGER API RUNNING");
+  console.log("======================================");
+  console.log(`🌍 PORT: ${PORT}`);
+  console.log(
+    `⚙️ ENV: ${process.env.NODE_ENV || "development"}`
+  );
+  console.log("🔌 SOCKET.IO ENABLED");
+  console.log("======================================\n");
 });
-
-/* =========================================================
-   EXPORTS
-========================================================= */
 
 module.exports = {
   app,

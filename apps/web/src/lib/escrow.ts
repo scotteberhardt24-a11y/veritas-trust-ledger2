@@ -1,22 +1,84 @@
-import { createPublicClient, createWalletClient, http } from "viem";
-import { localhost } from "viem/chains";
-import { parseAbi } from "viem";
-
 export const ESCROW_ADDRESS =
-  "PASTE_ESCROW_CONTRACT_ADDRESS";
+  process.env.NEXT_PUBLIC_ESCROW_ADDRESS ||
+  "0x0000000000000000000000000000000000000000";
 
-export const abi = parseAbi([
-  "function createJob(address worker) returns (uint256)",
-  "function fundJob(uint256 jobId, uint256 amount)",
-  "function startWork(uint256 jobId)",
-  "function completeJob(uint256 jobId)",
-  "function releasePayment(uint256 jobId)",
-  "function disputeJob(uint256 jobId)",
-  "function resolveDispute(uint256 jobId, bool payWorker)",
-  "function getJob(uint256 jobId) view returns (tuple(address client,address worker,uint256 amount,uint256 platformFee,uint8 status,bool exists))",
-]);
+export const abi = [
+  {
+    type: "function",
+    name: "createJob",
+    stateMutability: "payable",
+    inputs: [
+      {
+        name: "worker",
+        type: "address",
+      },
+    ],
+    outputs: [],
+  },
 
-export const publicClient = createPublicClient({
-  chain: localhost,
-  transport: http("http://127.0.0.1:8545"),
-});
+  {
+    type: "function",
+    name: "releasePayment",
+    stateMutability: "nonpayable",
+    inputs: [
+      {
+        name: "jobId",
+        type: "uint256",
+      },
+    ],
+    outputs: [],
+  },
+
+  {
+    type: "function",
+    name: "refundClient",
+    stateMutability: "nonpayable",
+    inputs: [
+      {
+        name: "jobId",
+        type: "uint256",
+      },
+    ],
+    outputs: [],
+  },
+
+  {
+    type: "function",
+    name: "getJob",
+    stateMutability: "view",
+    inputs: [
+      {
+        name: "jobId",
+        type: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        components: [
+          {
+            name: "client",
+            type: "address",
+          },
+          {
+            name: "worker",
+            type: "address",
+          },
+          {
+            name: "amount",
+            type: "uint256",
+          },
+          {
+            name: "status",
+            type: "uint8",
+          },
+          {
+            name: "exists",
+            type: "bool",
+          },
+        ],
+        name: "",
+        type: "tuple",
+      },
+    ],
+  },
+] as const;

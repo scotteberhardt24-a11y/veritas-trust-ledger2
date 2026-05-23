@@ -4,8 +4,6 @@ import React, { useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-
 import { apiGetMe } from '../../lib/api';
 
 export default function DashboardPage() {
@@ -104,7 +102,6 @@ export default function DashboardPage() {
             alignItems: 'center',
           }}
         >
-          <ConnectButton />
 
           <button
             onClick={() => {

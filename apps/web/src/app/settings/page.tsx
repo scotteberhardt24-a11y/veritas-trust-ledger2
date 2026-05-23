@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { useAuth } from '../layout';
+import { useAuth } from "@/context/AuthContext";
 export default function SettingsPage(){const{user,logout}=useAuth();const[saved,setSaved]=useState(false);const[form,setForm]=useState({name:user?.name||'',email:user?.email||'',notifE:true,notifS:true,notifD:true,twoFA:false,pub:true});const save=(e)=>{e.preventDefault();setSaved(true);setTimeout(()=>setSaved(false),2500);};
 const Tog=({label,desc,checked,onChange})=><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0',borderBottom:'1px solid var(--border)'}}><div><div style={{fontSize:13,fontWeight:500}}>{label}</div>{desc&&<div style={{fontSize:11,color:'var(--muted)',marginTop:2}}>{desc}</div>}</div><button onClick={onChange} type="button" style={{width:44,height:24,borderRadius:12,border:'none',cursor:'pointer',background:checked?'var(--cyan)':'var(--border-2)',position:'relative',transition:'background 0.2s',flexShrink:0}}><div style={{position:'absolute',top:3,borderRadius:'50%',width:18,height:18,background:'white',left:checked?23:3,transition:'left 0.2s'}}/></button></div>;
 const Sec=({title,children})=><div style={{background:'linear-gradient(135deg,rgba(7,20,53,0.95),rgba(5,26,74,0.8))',border:'1px solid rgba(6,182,212,0.12)',borderRadius:16,padding:20,marginBottom:20}}><h3 style={{fontFamily:'var(--font-display)',fontSize:16,marginBottom:16,paddingBottom:12,borderBottom:'1px solid var(--border)'}}>{title}</h3>{children}</div>;

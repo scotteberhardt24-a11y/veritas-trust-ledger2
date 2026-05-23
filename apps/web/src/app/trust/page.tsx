@@ -1,5 +1,5 @@
 'use client';
-import { useAuth } from '../layout';
+import { useAuth } from "@/context/AuthContext";
 const H=[{date:'Apr 26',event:'Job Completed: Web Development',change:'+45',score:720},{date:'Apr 24',event:'Escrow Released: $2,400',change:'+30',score:675},{date:'Apr 22',event:'Peer Review: 5/5 Stars',change:'+15',score:645},{date:'Apr 20',event:'Identity Verified',change:'+50',score:630},{date:'Apr 18',event:'Job Completed: Logo Design',change:'+35',score:580},{date:'Apr 15',event:'Dispute Resolved (Favorable)',change:'+10',score:545},{date:'Apr 12',event:'Escrow Released: $680',change:'+25',score:535},{date:'Apr 10',event:'Account Created',change:'+100',score:510}];
 const F=[{name:'Transaction Success',weight:25,score:92,color:'#22c55e'},{name:'Peer Reviews',weight:20,score:88,color:'#06b6d4'},{name:'Identity Verification',weight:15,score:100,color:'#ffd700'},{name:'Escrow Completion',weight:15,score:95,color:'#a78bfa'},{name:'Dispute History',weight:10,score:90,color:'#f59e0b'},{name:'Network Trust',weight:10,score:78,color:'#ec4899'},{name:'Ledger Integrity',weight:5,score:100,color:'#34d399'}];
 export default function TrustPage(){const{user}=useAuth();const score=Number(user?.truScore||user?.truscore||0);const tier=user?.tier||'Starter';

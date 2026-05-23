@@ -1,114 +1,72 @@
-"use client";
+// src/lib/adminMetrics.ts
 
-import { useState } from "react";
-import Sidebar from "@/components/Sidebar";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import { createAutoJob } from "@/lib/jobOrchestrator";
+export type AdminUserMetrics = {
+  completed_jobs?: number;
+  disputes_lost?: number;
+  avg_rating?: number;
+  verification_level?: string;
+};
 
-export default function AutoJobPage() {
-  const [title, setTitle] = useState("");
-  const [skills, setSkills] = useState("");
-  const [budget, setBudget] = useState(50);
+export function trustScore(user: AdminUserMetrics): number {
+  let score = 300;
 
-  const [result, setResult] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  score += (user.completed_jobs || 0) * 15;
 
-  async function handleCreate() {
-    setLoading(true);
+  score -= (user.disputes_lost || 0) * 40;
 
-    try {
-      const res = await createAutoJob({
-        title,
-        requiredSkills: skills
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
-        budget,
-      });
+  score += Math.floor((user.avg_rating || 0) * 50);
 
-      setResult(res);
-    } catch (err) {
-      console.error(err);
-    }
-
-    setLoading(false);
+  if (user.verification_level === "advanced") {
+    score += 120;
   }
 
-  return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-black text-white flex">
-        <Sidebar />
+  if (user.verification_level === "basic") {
+    score += 40;
+  }
 
-        <div className="flex-1 p-10">
-          <h1 className="text-5xl font-bold">
-            AI Auto-Matching Engine
-          </h1>
+  if (score > 1000) score = 1000;
 
-          <p className="text-zinc-400 mt-4">
-            Create a job — Veritas automatically selects a worker and opens escrow.
-          </p>
+  if (score < 0) score = 0;
 
-          {/* INPUT */}
-          <div className="mt-10 grid grid-cols-3 gap-4">
-            <input
-              placeholder="Job title"
-              value={title}
-              onChange={(e) =>
-                setTitle(e.target.value)
-              }
-              className="p-3 bg-white/5 border border-white/10 rounded-xl"
-            />
+  return score;
+}
 
-            <input
-              placeholder="Skills (comma separated)"
-              value={skills}
-              onChange={(e) =>
-                setSkills(e.target.value)
-              }
-              className="p-3 bg-white/5 border border-white/10 rounded-xl"
-            />
+export function calculateRisk(user: AdminUserMetrics): number {
+  let risk = 50;
 
-            <input
-              type="number"
-              value={budget}
-              onChange={(e) =>
-                setBudget(Number(e.target.value))
-              }
-              className="p-3 bg-white/5 border border-white/10 rounded-xl"
-            />
-          </div>
+  risk += (user.disputes_lost || 0) * 15;
 
-          {/* ACTION */}
-          <button
-            onClick={handleCreate}
-            disabled={loading}
-            className="mt-6 bg-cyan-500 text-black font-bold px-6 py-3 rounded-xl"
-          >
-            {loading ? "Creating..." : "Create Auto Job"}
-          </button>
+  risk -= (user.completed_jobs || 0) * 2;
 
-          {/* RESULT */}
-          {result && (
-            <div className="mt-10 bg-white/5 border border-white/10 p-6 rounded-3xl">
-              <h2 className="text-2xl font-bold">
-                Auto Match Result
-              </h2>
+  risk -= Math.floor((user.avg_rating || 0) * 5);
 
-              <p className="text-zinc-400 mt-2">
-                Worker: {result.worker.name}
-              </p>
+  if (risk < 0) risk = 0;
 
-              <p className="text-cyan-400 font-bold mt-2">
-                Match Score: {result.matchScore}
-              </p>
+  if (risk > 100) risk = 100;
 
-              <p className="text-zinc-400 mt-2">
-                Transaction: {result.txHash?.hash || "pending"}
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </ProtectedRoute>
-  );
+  return risk;
+}
+
+export function getTrustTier(score: number): string {
+  if (score >= 900) return "Diamond";
+
+  if (score >= 750) return "Platinum";
+
+  if (score >= 600) return "Gold";
+
+  if (score >= 450) return "Silver";
+
+  if (score >= 300) return "Bronze";
+
+  return "Starter";
+}
+
+export function getRiskLevel(risk: number): string {
+  if (risk <= 20) return "LOW";
+
+  if (risk <= 50) return "MEDIUM";
+
+  if (risk <= 75) return "HIGH";
+
+  return "CRITICAL";
 }

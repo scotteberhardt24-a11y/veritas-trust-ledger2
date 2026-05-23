@@ -5,7 +5,7 @@ const db = require("../db/db");
 const auth = require("../middleware/auth");
 
 const { v4: uuidv4 } = require("uuid");
-
+const { rankWorkers } = require("../services/matchingEngine");
 /* =========================================================
    LIST JOBS
 ========================================================= */
@@ -200,6 +200,7 @@ router.post("/", auth, async (req, res) => {
       description,
       category,
       budget,
+      skills
     } = req.body;
 
     if (!title) {
@@ -223,13 +224,14 @@ router.post("/", auth, async (req, res) => {
       RETURNING *
       `,
       [
-        uuidv4(),
-        req.user.userId,
-        title,
-        description || "",
-        category || "general",
-        budget || 0,
-      ]
+  uuidv4(),
+  req.user.userId,
+  title,
+  description || "",
+  category || "general",
+  budget || 0,
+  JSON.stringify(skills || [])
+]
     );
 
     res.status(201).json({
@@ -288,12 +290,16 @@ router.post("/:jobId/apply", auth, async (req, res) => {
 
     await db.query(
       `
-      INSERT INTO job_applications (
-        job_id,
-        worker_id,
-        cover_note
-      )
-      VALUES ($1, $2, $3)
+      NSERT INTO jobs (
+  job_id,
+  client_id,
+  title,
+  description,
+  category,
+  budget,
+  skills
+)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       `,
       [
         req.params.jobId,
@@ -315,7 +321,84 @@ router.post("/:jobId/apply", auth, async (req, res) => {
     });
   }
 });
+router.post("/:jobId/accept/:workerId", auth, async (req, res) => {
+  try {
+    // Verify job ownership
+    const jobCheck = await db.query(
+      `SELECT * FROM jobs
+       WHERE job_id = $1
+       AND client_id = $2`,
+      [req.params.jobId, req.user.userId]
+    );
 
+    if (jobCheck.rows.length === 0) {
+      return res.status(403).json({
+        error: "Not authorized for this job"
+      });
+    }
+
+    // Verify application exists
+    const appCheck = await db.query(
+      `SELECT * FROM job_applications
+       WHERE job_id = $1
+       AND worker_id = $2`,
+      [req.params.jobId, req.params.workerId]
+    );
+
+    if (appCheck.rows.length === 0) {
+      return res.status(404).json({
+        error: "Application not found"
+      });
+    }
+
+    // Mark job hired
+    await db.query(
+      `UPDATE jobs
+       SET status = 'in_progress',
+           hired_worker_id = $1
+       WHERE job_id = $2`,
+      [req.params.workerId, req.params.jobId]
+    );
+
+    // Reject others automatically
+    await db.query(
+      `UPDATE job_applications
+       SET status = 'rejected'
+       WHERE job_id = $1
+       AND worker_id != $2`,
+      [req.params.jobId, req.params.workerId]
+    );
+
+    // Accept selected worker
+    await db.query(
+      `UPDATE job_applications
+       SET status = 'accepted'
+       WHERE job_id = $1
+       AND worker_id = $2`,
+      [req.params.jobId, req.params.workerId]
+    );
+
+    // Emit realtime event
+    const io = req.app.get("io");
+
+    io.to(`user:${req.params.workerId}`).emit("job:hired", {
+      jobId: req.params.jobId
+    });
+
+    res.json({
+      success: true,
+      hired_worker: req.params.workerId,
+      job_id: req.params.jobId
+    });
+
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      error: "Failed to hire worker"
+    });
+  }
+});
 /* =========================================================
    GET APPLICATIONS
 ========================================================= */
@@ -352,5 +435,89 @@ router.get("/:jobId/applications", auth, async (req, res) => {
     });
   }
 });
+/*
+|--------------------------------------------------------------------------
+| Select Top Workers For Job
+|--------------------------------------------------------------------------
+*/
 
+router.post("/:jobId/select-workers", auth, async (req, res) => {
+
+  try {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Get Job
+    |--------------------------------------------------------------------------
+    */
+
+    const jobResult = await db.query(
+      "SELECT * FROM jobs WHERE job_id = $1",
+      [req.params.jobId]
+    );
+
+    if (jobResult.rows.length === 0) {
+
+      return res.status(404).json({
+        success: false,
+        error: "Job not found"
+      });
+
+    }
+
+    const job = jobResult.rows[0];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rank Workers
+    |--------------------------------------------------------------------------
+    */
+
+    const selectedWorkers = await rankWorkers(job);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Save Selected Workers
+    |--------------------------------------------------------------------------
+    */
+
+    await db.query(
+      `
+      UPDATE jobs
+      SET
+        selected_workers = $1,
+        workflow_stage = 'workers_selected'
+      WHERE job_id = $2
+      `,
+      [
+        JSON.stringify(selectedWorkers),
+        req.params.jobId
+      ]
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | Return Response
+    |--------------------------------------------------------------------------
+    */
+
+    res.json({
+      success: true,
+      workflow_stage: "workers_selected",
+      total_selected: selectedWorkers.length,
+      selected_workers: selectedWorkers
+    });
+
+  } catch (err) {
+
+    console.error("Worker selection error:", err);
+
+    res.status(500).json({
+      success: false,
+      error: "Failed to select workers"
+    });
+
+  }
+
+});
 module.exports = router;
