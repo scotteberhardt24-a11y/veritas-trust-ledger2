@@ -1,186 +1,97 @@
-const bcrypt = require("bcryptjs");
+require("dotenv").config();
+
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
-const db = require("../db/db");
+const { ethers } = require("ethers");
 
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRES = process.env.JWT_EXPIRES_IN || "7d";
+// In-memory nonce store (replace with Redis/DB later in production)
+const nonces = new Map();
 
-function generateToken(user) {
-  return jwt.sign(
-    {
-      userId: user.user_id,
-      role: user.role,
-    },
-    JWT_SECRET,
-    {
-      expiresIn: JWT_EXPIRES,
-    }
-  );
-}
+/* =========================================================
+   STEP 2A: GET NONCE
+========================================================= */
+const getNonce = (req, res) => {
+  const { address } = req.params;
 
-exports.register = async (req, res) => {
-  try {
-    const {
-      name,
-      email,
-      password,
-      role,
-    } = req.body;
-
-    if (!name || !email || !password) {
-      return res.status(400).json({
-        error: "All fields are required.",
-      });
-    }
-
-    const existing = await db.query(
-      "SELECT user_id FROM users WHERE email=$1",
-      [email.toLowerCase()]
-    );
-
-    if (existing.rows.length > 0) {
-      return res.status(409).json({
-        error: "An account with this email already exists.",
-      });
-    }
-
-    const hashedPassword = await bcrypt.hash(
-      password,
-      12
-    );
-
-    const verificationToken =
-      crypto.randomBytes(32).toString("hex");
-
-    const result = await db.query(
-      `
-      INSERT INTO users
-      (
-        name,
-        email,
-        password_hash,
-        role,
-        verification_token,
-        is_verified
-      )
-      VALUES ($1,$2,$3,$4,$5,false)
-      RETURNING *
-      `,
-      [
-        name,
-        email.toLowerCase(),
-        hashedPassword,
-        role || "worker",
-        verificationToken,
-      ]
-    );
-
-    const user = result.rows[0];
-
-    const token = generateToken(user);
-
-    return res.status(201).json({
-      success: true,
-      message:
-        "Account created successfully.",
-      token,
-      user,
-    });
-  } catch (err) {
-    console.error(err);
-
-    return res.status(500).json({
-      error: "Registration failed.",
-    });
+  if (!address) {
+    return res.status(400).json({ error: "Address required" });
   }
+
+  const nonce = Math.floor(Math.random() * 1000000).toString();
+
+  nonces.set(address.toLowerCase(), nonce);
+
+  return res.json({
+    address,
+    nonce,
+  });
 };
 
-exports.login = async (req, res) => {
-  try {
-    const {
-      email,
-      password,
-    } = req.body;
+/* =========================================================
+   STEP 2B: VERIFY SIGNATURE + ISSUE JWT
+========================================================= */
+const verifySignature = async (req, res) => {
+  const { address, signature } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({
-        error:
-          "Email and password are required.",
+  if (!address || !signature) {
+    return res.status(400).json({
+      error: "Address and signature required",
+    });
+  }
+
+  const nonce = nonces.get(address.toLowerCase());
+
+  if (!nonce) {
+    return res.status(400).json({
+      error: "Nonce not found or expired",
+    });
+  }
+
+  const message = `Login to Veritas Trust Ledger\nNonce: ${nonce}`;
+
+  try {
+    const recovered = ethers.verifyMessage(message, signature);
+
+    if (recovered.toLowerCase() !== address.toLowerCase()) {
+      return res.status(401).json({
+        error: "Invalid signature",
       });
     }
 
-    const result = await db.query(
-      `
-      SELECT *
-      FROM users
-      WHERE email=$1
-      `,
-      [email.toLowerCase()]
+    const token = jwt.sign(
+      {
+        address,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
     );
 
-    if (result.rows.length === 0) {
-      return res.status(401).json({
-        error:
-          "No account found with this email.",
-      });
-    }
-
-    const user = result.rows[0];
-
-    const validPassword =
-      await bcrypt.compare(
-        password,
-        user.password_hash
-      );
-
-    if (!validPassword) {
-      return res.status(401).json({
-        error: "Incorrect password.",
-      });
-    }
-
-    const token = generateToken(user);
+    nonces.delete(address.toLowerCase());
 
     return res.json({
       success: true,
-      message: "Login successful.",
       token,
-      user,
     });
   } catch (err) {
-    console.error(err);
+    console.error("verifySignature error:", err);
 
     return res.status(500).json({
-      error: "Login failed.",
+      error: "Signature verification failed",
     });
   }
 };
 
-exports.me = async (req, res) => {
-  try {
-    const result = await db.query(
-      `
-      SELECT *
-      FROM users
-      WHERE user_id=$1
-      `,
-      [req.user.userId]
-    );
+/* =========================================================
+   STEP 4 TEST ENDPOINT (WHO AM I)
+========================================================= */
+const me = (req, res) => {
+  return res.json({
+    success: true,
+    user: req.user,
+  });
+};
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({
-        error: "User not found.",
-      });
-    }
-
-    return res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-
-    return res.status(500).json({
-      error:
-        "Failed to fetch profile.",
-    });
-  }
+module.exports = {
+  getNonce,
+  verifySignature,
+  me,
 };

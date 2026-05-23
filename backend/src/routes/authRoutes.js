@@ -1,19 +1,25 @@
 const express = require("express");
-
 const router = express.Router();
 
-const auth = require("../middleware/auth");
-
 const {
-  register,
-  login,
+  getNonce,
+  verifySignature,
   me,
 } = require("../controllers/authController");
 
-router.post("/register", register);
+const {
+  authMiddleware,
+} = require("../middleware/auth");
 
-router.post("/login", login);
+/* =========================================================
+   STEP 2 ROUTES
+========================================================= */
+router.get("/nonce/:address", getNonce);
+router.post("/verify", verifySignature);
 
-router.get("/me", auth, me);
+/* =========================================================
+   STEP 3 TEST PROTECTED ROUTE
+========================================================= */
+router.get("/me", authMiddleware, me);
 
 module.exports = router;

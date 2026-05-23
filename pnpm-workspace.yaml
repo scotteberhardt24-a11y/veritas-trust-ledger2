@@ -1,3 +1,4 @@
 packages:
-  - 'backend'
-  - 'apps/*'
+  - "backend"
+  - "apps/*"
+  - "shared"
