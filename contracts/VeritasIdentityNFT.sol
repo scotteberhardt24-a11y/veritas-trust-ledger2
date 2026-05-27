@@ -5,99 +5,81 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract VeritasIdentityNFT is ERC721, AccessControl {
-    uint256 public nextTokenId;
 
-    bytes32 public constant VERIFIER_ROLE =
-        keccak256("VERIFIER_ROLE");
+    bytes32 public constant ISSUER_ROLE =
+        keccak256("ISSUER_ROLE");
 
-    enum VerificationLevel {
-        NONE,
-        BASIC,
-        KYC,
-        BUSINESS,
-        ESCROW_TRUSTED
-    }
+    uint256 private nextTokenId;
 
-    struct IdentityData {
-        string metadataURI;
-        VerificationLevel level;
-        uint256 createdAt;
-    }
+    mapping(uint256 => string) private tokenURIs;
 
-    mapping(uint256 => IdentityData) public identityData;
-    mapping(address => bool) public hasIdentity;
-
-    constructor() ERC721("Veritas Identity", "VID") {
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(VERIFIER_ROLE, msg.sender);
-    }
-
-    // ---------------------------
-    // MINT (VERIFIER ONLY)
-    // ---------------------------
-    function mint(address to, string memory metadataURI)
-        public
-        onlyRole(VERIFIER_ROLE)
+    constructor()
+        ERC721(
+            "Veritas Identity",
+            "VID"
+        )
     {
-        require(!hasIdentity[to], "User already has identity NFT");
+        _grantRole(
+            DEFAULT_ADMIN_ROLE,
+            msg.sender
+        );
+
+        _grantRole(
+            ISSUER_ROLE,
+            msg.sender
+        );
+    }
+
+    function mintIdentity(
+        address to,
+        string memory metadataURI
+    )
+        public
+        onlyRole(ISSUER_ROLE)
+        returns (uint256)
+    {
+        nextTokenId++;
 
         uint256 tokenId = nextTokenId;
 
         _safeMint(to, tokenId);
 
-        identityData[tokenId] = IdentityData({
-            metadataURI: metadataURI,
-            level: VerificationLevel.NONE,
-            createdAt: block.timestamp
-        });
+        tokenURIs[tokenId] = metadataURI;
 
-        hasIdentity[to] = true;
-        nextTokenId++;
+        return tokenId;
     }
 
-    // ---------------------------
-    // SET VERIFICATION LEVEL
-    // ---------------------------
-    function setVerificationLevel(
-        uint256 tokenId,
-        VerificationLevel level
+    function burnIdentity(
+        uint256 tokenId
     )
         public
-        onlyRole(VERIFIER_ROLE)
     {
-        require(_ownerOf(tokenId) != address(0), "Token does not exist");
+        require(
+            ownerOf(tokenId) == msg.sender,
+            "Not token owner"
+        );
 
-        identityData[tokenId].level = level;
+        _burn(tokenId);
+
+        delete tokenURIs[tokenId];
     }
 
-    // ---------------------------
-    // READ TOKEN URI
-    // ---------------------------
-    function tokenURI(uint256 tokenId)
+    function tokenURI(
+        uint256 tokenId
+    )
         public
         view
         override
         returns (string memory)
     {
-        require(_ownerOf(tokenId) != address(0), "Token does not exist");
-        return identityData[tokenId].metadataURI;
+        require(
+            _ownerOf(tokenId) != address(0),
+            "Token does not exist"
+        );
+
+        return tokenURIs[tokenId];
     }
 
-    // ---------------------------
-    // GET VERIFICATION LEVEL
-    // ---------------------------
-    function getVerificationLevel(uint256 tokenId)
-        public
-        view
-        returns (VerificationLevel)
-    {
-        require(_ownerOf(tokenId) != address(0), "Token does not exist");
-        return identityData[tokenId].level;
-    }
-
-    // ---------------------------
-    // SOULBOUND ENFORCEMENT
-    // ---------------------------
     function _update(
         address to,
         uint256 tokenId,
@@ -109,25 +91,29 @@ contract VeritasIdentityNFT is ERC721, AccessControl {
     {
         address from = _ownerOf(tokenId);
 
-        // allow mint only
-        if (from == address(0)) {
-            return super._update(to, tokenId, auth);
+        // Allow minting and burning only
+        if (
+            from != address(0) &&
+            to != address(0)
+        ) {
+            revert("Soulbound: transfers disabled");
         }
 
-        revert("Identity NFT is soulbound");
+        return super._update(
+            to,
+            tokenId,
+            auth
+        );
     }
 
-    // ---------------------------
-    // FIX: supportsInterface override (CRITICAL)
-    // ---------------------------
-    function supportsInterface(bytes4 interfaceId)
+    function supportsInterface(
+        bytes4 interfaceId
+    )
         public
         view
         override(ERC721, AccessControl)
         returns (bool)
     {
-        return
-            ERC721.supportsInterface(interfaceId) ||
-            AccessControl.supportsInterface(interfaceId);
+        return super.supportsInterface(interfaceId);
     }
 }

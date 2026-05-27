@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 
 /* =========================================================
-   AUTH MIDDLEWARE (STEP 3)
+   AUTH MIDDLEWARE
 ========================================================= */
-const authMiddleware = (req, res, next) => {
+
+function authMiddleware(req, res, next) {
   const header = req.headers.authorization;
 
   if (!header) {
@@ -21,18 +22,18 @@ const authMiddleware = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "dev_secret"
+    );
 
     req.user = decoded;
-
-    return next();
+    next();
   } catch (err) {
     return res.status(401).json({
-      error: "Invalid or expired token",
+      error: "Invalid token",
     });
   }
-};
+}
 
-module.exports = {
-  authMiddleware,
-};
+module.exports = authMiddleware;

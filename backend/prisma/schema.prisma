@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  password     String
+  role         String   @default("user")
+  wallet       String?  @unique
+  truscore     Int      @default(500)
+  verified     Boolean  @default(false)
+
+  escrowsAsClient Escrow[] @relation("ClientEscrows")
+  escrowsAsWorker Escrow[] @relation("WorkerEscrows")
+
+  sentMessages     Message[] @relation("

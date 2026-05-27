@@ -1,0 +1,32 @@
+{
+  "_format": "hh3-artifact-1",
+  "contractName": "IReputation",
+  "sourceName": "contracts/VeritasEscrow.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "internalType": "int256",
+          "name": "amount",
+          "type": "int256"
+        }
+      ],
+      "name": "addReputation",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {},
+  "immutableReferences": {},
+  "inputSourceName": "project/contracts/VeritasEscrow.sol",
+  "buildInfoId": "solc-0_8_28-95c2c2f56d8985af5746265e13bf0bbe727933f7"
+}

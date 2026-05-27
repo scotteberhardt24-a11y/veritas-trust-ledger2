@@ -11,19 +11,40 @@ importers:
       '@openzeppelin/contracts':
         specifier: ^5.6.1
         version: 5.6.1
+      cors:
+        specifier: ^2.8.6
+        version: 2.8.6
       ethers:
         specifier: ^6.16.0
         version: 6.16.0
+      express:
+        specifier: ^4.22.2
+        version: 4.22.2
+      pg:
+        specifier: ^8.20.0
+        version: 8.20.0
     devDependencies:
+      '@nomicfoundation/hardhat-chai-matchers':
+        specifier: ^3.0.0
+        version: 3.0.0
       '@nomicfoundation/hardhat-ethers':
         specifier: ^4.0.11
         version: 4.0.11(hardhat@3.4.5)
       '@types/node':
         specifier: ^22.8.5
         version: 22.19.19
+      chai:
+        specifier: ^6.2.2
+        version: 6.2.2
+      dotenv:
+        specifier: ^17.4.2
+        version: 17.4.2
       hardhat:
         specifier: ^3.4.5
         version: 3.4.5
+      nodemon:
+        specifier: ^3.1.14
+        version: 3.1.14
       typescript:
         specifier: ~5.8.0
         version: 5.8.3
@@ -1914,6 +1935,9 @@ packages:
     resolution: {integrity: sha512-syVtyDOyJv/IqfpmFsM6/rlpoq6XYl9j9urBLYGDci8pv/ow6vAdOxTrR9x2wE+cQi02TjeODG6QHMyr3B9Z2g==}
     engines: {node: '>= 20'}
 
+  '@nomicfoundation/hardhat-chai-matchers@3.0.0':
+    resolution: {integrity: sha512-N4P+/1Da17RhsxvItWyH3ze1ffjCDomx+F/UUcPahrH9D+B8X8E3GFgEf0hTJY9ekQk8eS3jv9aueEosr1rOGg==}
+
   '@nomicfoundation/hardhat-errors@3.0.12':
     resolution: {integrity: sha512-2viEq1D19FHWKpfB2vVeL0R6d+iZR2E5h0EhKQQMc1ukDUV2fel/7fRjlWuCOx2CFC+5mHL2saRcN8KlYsX8hg==}
 
@@ -3097,6 +3121,10 @@ packages:
 
   caniuse-lite@1.0.30001793:
     resolution: {integrity: sha512-iwSsYWaCOoh26cV8NwNRViHlrfUvYsHDfRVcbtmw0Kg6PJIZZXwMkj1442FYLBGkeUf1juAsU3DTfxW579mrPA==}
+
+  chai@6.2.2:
+    resolution: {integrity: sha512-NUPRluOfOiTKBKvWPtSD4PhFvWCqOi0BGStNWs57X9js7XGTprSmFoz5F0tWhR4WPjNeR9jXqdC7/UpSJTnlRg==}
+    engines: {node: '>=18'}
 
   chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -9175,6 +9203,8 @@ snapshots:
       '@nomicfoundation/edr-linux-x64-musl': 0.12.0-next.32
       '@nomicfoundation/edr-win32-x64-msvc': 0.12.0-next.32
 
+  '@nomicfoundation/hardhat-chai-matchers@3.0.0': {}
+
   '@nomicfoundation/hardhat-errors@3.0.12':
     dependencies:
       '@nomicfoundation/hardhat-utils': 4.1.1
@@ -10603,6 +10633,8 @@ snapshots:
   camelcase@6.3.0: {}
 
   caniuse-lite@1.0.30001793: {}
+
+  chai@6.2.2: {}
 
   chalk@2.4.2:
     dependencies:
