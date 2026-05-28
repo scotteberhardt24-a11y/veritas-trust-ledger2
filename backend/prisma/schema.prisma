@@ -16,8 +16,65 @@ model User {
   wallet       String?  @unique
   truscore     Int      @default(500)
   verified     Boolean  @default(false)
+  passport Passport?
 
   escrowsAsClient Escrow[] @relation("ClientEscrows")
   escrowsAsWorker Escrow[] @relation("WorkerEscrows")
 
-  sentMessages     Message[] @relation("
+  sentMessages     Message[] @relation("")
+
+  model Event {
+  id          String   @id @default(cuid())
+  type        String
+  actorId     String?
+  entityType  String
+  entityId    String
+  metadata    Json
+  createdAt   DateTime @default(now())
+
+  model TrustScore {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  score       Int      @default(500)
+
+  completedEscrows Int @default(0)
+  disputesLost     Int @default(0)
+  disputesWon      Int @default(0)
+  responseRating   Float @default(0)
+
+  updatedAt DateTime @updatedAt
+
+  model Passport {
+  id                String   @id @default(cuid())
+
+  userId            String   @unique
+
+  tokenId           Int?
+
+  walletAddress     String   @unique
+
+  verificationLevel String   @default("UNVERIFIED")
+
+  trustScore        Int      @default(500)
+
+  completedEscrows  Int      @default(0)
+
+  disputeRatio      Float    @default(0)
+
+  metadataURI       String?
+
+  imageURI          String?
+
+  createdAt         DateTime @default(now())
+
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+  actor User? @relation(fields: [actorId], references: [id])
+}
+}
