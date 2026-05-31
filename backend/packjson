@@ -1,16 +1,14 @@
 {
-   "name": "veritas-backend",
-   "version": "1.0.0",
-   "private": "true",
-   "description": "Veritas Trust Ledger API — Node/Express backend (Railway-ready)",
-   "main": "src/server.js",
+  "name": "veritas-backend",
+  "version": "1.0.0",
+  "private": "true",
+  "description": "Veritas Trust Ledger API — Node/Express backend 
+(Railway-ready)",
+  "main": "src/server.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js",
-    "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push",
-    "prisma:seed": "tsx prisma/seed.ts",
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "build": "echo 'No build step — plain JS'",
     "lint": "eslint src/ --if-present",
     "test": "jest --passWithNoTests",
     "db:migrate": "node src/db/migrate.js",
@@ -84,3 +82,4 @@
     "node": ">=20.0.0"
   }
 }
+

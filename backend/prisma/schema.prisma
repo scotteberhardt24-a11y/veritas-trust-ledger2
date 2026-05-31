@@ -8,73 +8,231 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  name         String
-  email        String   @unique
-  password     String
-  role         String   @default("user")
-  wallet       String?  @unique
-  truscore     Int      @default(500)
-  verified     Boolean  @default(false)
-  passport Passport?
+  id               String           @id @default(uuid()) @db.Uuid
+  email            String           @unique
+  username         String           @unique
+  passwordHash     String
+  role             UserRole         @default(CLIENT)
+  trustScore       Int              @default(50)
+  riskScore        Int              @default(0)
+  flagged          Boolean          @default(false)
+  skills           String[]
+  hourlyRate       Int              @default(50)
+  availability     Boolean          @default(true)
+  completedJobs    Int              @default(0)
+  responseTime     Int              @default(24)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  clientContracts  Contract[]       @relation("ClientContracts")
+  workerContracts  Contract[]       @relation("WorkerContracts")
+  disputesFiled    Dispute[]        @relation("DisputesFiled")
+  disputesResolved Dispute[]        @relation("DisputesResolved")
+  clientEscrows    Escrow[]         @relation("ClientEscrows")
+  workerEscrows    Escrow[]         @relation("WorkerEscrows")
+  jobsPosted       Job[]            @relation("ClientJobs")
+  applications     JobApplication[]
+  receivedMessages Message[]        @relation("ReceivedMessages")
+  sentMessages     Message[]        @relation("SentMessages")
+  notifications    Notification[]
+  reviewsReceived  Review[]         @relation("ReviewsReceived")
+  reviewsWritten   Review[]         @relation("ReviewsWritten")
+  sessions         Session[]
+  wallet           Wallet?
 
-  escrowsAsClient Escrow[] @relation("ClientEscrows")
-  escrowsAsWorker Escrow[] @relation("WorkerEscrows")
+  @@index([email])
+  @@index([username])
+}
 
-  sentMessages     Message[] @relation("")
+model Job {
+  id           String           @id @default(uuid()) @db.Uuid
+  title        String
+  description  String
+  budget       Float
+  status       JobStatus        @default(OPEN)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  clientId     String           @db.Uuid
+  disputes     Dispute[]
+  client       User             @relation("ClientJobs", fields: [clientId], references: [id])
+  applications JobApplication[]
+  reviews      Review[]
 
-  model Event {
-  id          String   @id @default(cuid())
-  type        String
-  actorId     String?
-  entityType  String
-  entityId    String
-  metadata    Json
+  @@index([status])
+}
+
+model JobApplication {
+  id          String   @id @default(uuid()) @db.Uuid
+  coverLetter String
   createdAt   DateTime @default(now())
+  jobId       String   @db.Uuid
+  workerId    String   @db.Uuid
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  worker      User     @relation(fields: [workerId], references: [id])
 
-  model TrustScore {
-  id          String   @id @default(cuid())
-  userId      String   @unique
-  score       Int      @default(500)
-
-  completedEscrows Int @default(0)
-  disputesLost     Int @default(0)
-  disputesWon      Int @default(0)
-  responseRating   Float @default(0)
-
-  updatedAt DateTime @updatedAt
-
-  model Passport {
-  id                String   @id @default(cuid())
-
-  userId            String   @unique
-
-  tokenId           Int?
-
-  walletAddress     String   @unique
-
-  verificationLevel String   @default("UNVERIFIED")
-
-  trustScore        Int      @default(500)
-
-  completedEscrows  Int      @default(0)
-
-  disputeRatio      Float    @default(0)
-
-  metadataURI       String?
-
-  imageURI          String?
-
-  createdAt         DateTime @default(now())
-
-  updatedAt         DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
+  @@unique([jobId, workerId])
 }
 
-  user User @relation(fields: [userId], references: [id])
+model Contract {
+  id         String         @id @default(uuid()) @db.Uuid
+  terms      String
+  amount     Float
+  status     ContractStatus @default(PENDING)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  clientId   String         @db.Uuid
+  workerId   String         @db.Uuid
+  escrowId   String?        @db.Uuid
+  client     User           @relation("ClientContracts", fields: [clientId], references: [id])
+  escrow     Escrow?        @relation(fields: [escrowId], references: [id])
+  worker     User           @relation("WorkerContracts", fields: [workerId], references: [id])
+  milestones Milestone[]
+  payments   Payment[]
 }
 
-  actor User? @relation(fields: [actorId], references: [id])
+model Escrow {
+  id           String              @id @default(uuid()) @db.Uuid
+  amount       Float
+  status       EscrowStatus        @default(HOLDING)
+  createdAt    DateTime            @default(now())
+  clientId     String              @db.Uuid
+  workerId     String              @db.Uuid
+  Contract     Contract[]
+  client       User                @relation("ClientEscrows", fields: [clientId], references: [id])
+  worker       User                @relation("WorkerEscrows", fields: [workerId], references: [id])
+  transactions EscrowTransaction[]
 }
+
+model EscrowTransaction {
+  id        String   @id @default(uuid()) @db.Uuid
+  type      String
+  amount    Float
+  createdAt DateTime @default(now())
+  escrowId  String   @db.Uuid
+  escrow    Escrow   @relation(fields: [escrowId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id         String   @id @default(uuid()) @db.Uuid
+  amount     Float
+  txHash     String?
+  createdAt  DateTime @default(now())
+  contractId String   @db.Uuid
+  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+}
+
+model Milestone {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String
+  description String
+  amount      Float
+  completed   Boolean  @default(false)
+  contractId  String   @db.Uuid
+  contract    Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id         String   @id @default(uuid()) @db.Uuid
+  rating     Int
+  comment    String
+  createdAt  DateTime @default(now())
+  jobId      String   @db.Uuid
+  reviewerId String   @db.Uuid
+  revieweeId String   @db.Uuid
+  job        Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  reviewee   User     @relation("ReviewsReceived", fields: [revieweeId], references: [id])
+  reviewer   User     @relation("ReviewsWritten", fields: [reviewerId], references: [id])
+}
+
+model Dispute {
+  id           String        @id @default(uuid()) @db.Uuid
+  reason       String
+  status       DisputeStatus @default(OPEN)
+  createdAt    DateTime      @default(now())
+  jobId        String        @db.Uuid
+  filedById    String        @db.Uuid
+  resolvedById String?       @db.Uuid
+  filedBy      User          @relation("DisputesFiled", fields: [filedById], references: [id])
+  job          Job           @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  resolvedBy   User?         @relation("DisputesResolved", fields: [resolvedById], references: [id])
+}
+
+model Wallet {
+  id      String @id @default(uuid()) @db.Uuid
+  address String @unique
+  balance Float  @default(0)
+  userId  String @unique @db.Uuid
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id        String    @id @default(uuid()) @db.Uuid
+  createdAt DateTime  @default(now())
+  messages  Message[]
+}
+
+model Message {
+  id             String       @id @default(uuid()) @db.Uuid
+  content        String
+  createdAt      DateTime     @default(now())
+  conversationId String       @db.Uuid
+  senderId       String       @db.Uuid
+  recipientId    String       @db.Uuid
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  recipient      User         @relation("ReceivedMessages", fields: [recipientId], references: [id])
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(uuid()) @db.Uuid
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  id        String   @id @default(uuid()) @db.Uuid
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+  CLIENT
+  WORKER
+  ADMIN
+  MODERATOR
+}
+
+enum JobStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  DISPUTED
+}
+
+enum ContractStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum EscrowStatus {
+  HOLDING
+  RELEASED
+  REFUNDED
+  DISPUTED
+}
+
+enum DisputeStatus {
+  OPEN
+  UNDER_REVIEW
+  RESOLVED
+  REJECTED
 }

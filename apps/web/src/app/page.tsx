@@ -1,103 +1,41 @@
-'use client';
-
-import React from 'react';
-import Link from 'next/link';
-
 export default function HomePage() {
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        background:
-          'linear-gradient(to bottom right,#020617,#0f172a,#111827)',
-        color: 'white',
-        padding: 40,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1200,
-          margin: '0 auto',
-        }}
-      >
-        <div
-          style={{
-            textAlign: 'center',
-            marginTop: 100,
-          }}
-        >
-          <div style={{ fontSize: 72 }}>
-            🛡️
-          </div>
+    <div className="min-h-screen flex items-center justify-center px-6">
+      <div className="veritas-glass rounded-[32px] p-12 max-w-5xl w-full 
+text-center">
 
-          <h1
-            style={{
-              fontSize: 64,
-              fontWeight: 900,
-              marginBottom: 20,
-            }}
-          >
-            Veritas Trust Ledger
-          </h1>
+        <div className="mb-8 flex justify-center">
+          <img
+            src="/veritas-shield.png"
+            alt="VERITAS"
+            className="w-40 h-40 object-contain veritas-gold-glow"
+          />
+        </div>
 
-          <p
-            style={{
-              fontSize: 22,
-              opacity: 0.8,
-              maxWidth: 800,
-              margin: '0 auto',
-              lineHeight: 1.5,
-            }}
-          >
-            Decentralized trust verification, escrow protection,
-            TruScore reputation, NFT credentials, and fraud-resistant
-            digital identity infrastructure.
-          </p>
+        <h1 className="veritas-title veritas-cursive">
+          VERITAS
+        </h1>
 
-          <div
-            style={{
-              marginTop: 40,
-              display: 'flex',
-              gap: 20,
-              justifyContent: 'center',
-            }}
-          >
-            <Link href="/auth">
-              <button style={primaryButton}>
-                Launch Platform
-              </button>
-            </Link>
+        <p className="mt-6 text-xl text-slate-300 max-w-2xl mx-auto 
+leading-relaxed">
+          Enterprise-grade trust infrastructure powered by security,
+          verification, escrow intelligence, and AI-assisted dispute 
+resolution.
+        </p>
 
-            <Link href="/dashboard">
-              <button style={secondaryButton}>
-                Dashboard
-              </button>
-            </Link>
-          </div>
+        <div className="mt-12 flex flex-wrap gap-6 justify-center">
+          <button className="px-8 py-4 rounded-2xl bg-blue-700 
+hover:bg-blue-600 transition-all veritas-blue-glow font-semibold">
+            Enter Platform
+          </button>
+
+          <button className="px-8 py-4 rounded-2xl border 
+border-yellow-500/30 bg-yellow-500/10 hover:bg-yellow-500/20 
+transition-all veritas-gold-glow font-semibold">
+            Trust Network
+          </button>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
-
-const primaryButton: React.CSSProperties = {
-  padding: '16px 28px',
-  borderRadius: 12,
-  border: 'none',
-  background: '#2563eb',
-  color: 'white',
-  fontWeight: 700,
-  cursor: 'pointer',
-  fontSize: 16,
-};
-
-const secondaryButton: React.CSSProperties = {
-  padding: '16px 28px',
-  borderRadius: 12,
-  border: '1px solid #374151',
-  background: 'transparent',
-  color: 'white',
-  fontWeight: 700,
-  cursor: 'pointer',
-  fontSize: 16,
-};

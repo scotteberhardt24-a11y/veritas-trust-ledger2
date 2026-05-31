@@ -6,9 +6,12 @@ const app = require("./app");
 const { setIO } = require("./services/socketService");
 
 const PORT = process.env.PORT || 4000;
-
+const passportRoutes =require("./routes/passportRoutes");
 const server = http.createServer(app);
-
+app.use(
+  "/api/passport",
+  passportRoutes
+);
 /* =========================================================
    SOCKET.IO
 ========================================================= */
