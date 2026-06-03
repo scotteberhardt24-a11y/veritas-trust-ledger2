@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+:root {
+  --background: #06111f;
+  --foreground: #f8fafc;
+
+  --card: rgba(10, 25, 47, 0.82);
+  --card-foreground: #f8fafc;
+
+  --popover: rgba(15, 23, 42, 0.96);
+  --popover-foreground: #f8fafc;
+
+  --primary: #0f4c81;
+  --primary-foreground: #ffffff;
+
+  --secondary: #132238;
+  --secondary-foreground: #f8fafc;
+
+  --muted: #172554;
+  --muted-foreground: #94a3b8;
+
+  --accent: #d4af37;
+  --accent-foreground: #06111f;
+
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+
+  --border: rgba(255,255,255,0.08);
+  --input: rgba(255,255,255,0.06);
+  --ring: #2563eb;
+
+  --radius: 1.25rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(37,99,235,0.18), transparent 28%),
+    radial-gradient(circle at top right, rgba(212,175,55,0.12), transparent 22%),
+    radial-gradient(circle at bottom, rgba(220,38,38,0.12), transparent 18%),
+    #06111f;
+
+  color: var(--foreground);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+* {
+  border-color: var(--border);
+}
+
+.veritas-glass {
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+.veritas-gold-glow {
+  box-shadow:
+    0 0 15px rgba(212,175,55,0.25),
+    0 0 40px rgba(212,175,55,0.12);
+}
+
+.veritas-blue-glow {
+  box-shadow:
+    0 0 15px rgba(37,99,235,0.35),
+    0 0 40px rgba(37,99,235,0.18);
+}
+
+.veritas-red-glow {
+  box-shadow:
+    0 0 15px rgba(220,38,38,0.25),
+    0 0 40px rgba(220,38,38,0.12);
+}
+
+.veritas-title {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+
+  background: linear-gradient(
+    to right,
+    #ffffff,
+    #d4af37,
+    #ffffff
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.veritas-cursive {
+  font-family: "Times New Roman", serif;
+  font-style: italic;
+  letter-spacing: 0.08em;
+}
