@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --background: #07111f;
+  --foreground: #ffffff;
+
+  --navy: #07111f;
+  --navy-light: #0f1c2e;
+
+  --gold: #d4af37;
+  --gold-soft: #f4d27a;
+
+  --red: #8b1111;
+
+  --white: #ffffff;
+
+  --border: rgba(255,255,255,0.08);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(
+    to bottom,
+    #07111f,
+    #0f1c2e
+  );
+
+  color: white;
+  font-family: Inter, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.veritas-glow {
+  box-shadow:
+    0 0 20px rgba(212,175,55,0.25),
+    0 0 40px rgba(212,175,55,0.08);
+}
+
+.veritas-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+}
+
+.gold-text {
+  color: #d4af37;
+}

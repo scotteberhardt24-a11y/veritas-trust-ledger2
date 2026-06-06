@@ -1,42 +1,11 @@
 {
   "name": "veritas-trust-ledger",
-  "version": "1.0.0",
   "private": true,
-  "description": "Veritas Trust Ledger — transparent trust verification platform",
+  "version": "1.0.0",
+
   "scripts": {
-    "dev:backend": "pnpm --filter veritas-backend dev",
-    "dev:web": "pnpm --filter veritas-web dev",
-    "dev:mobile": "pnpm --filter veritas-mobile start",
-    "build:backend": "pnpm --filter veritas-backend build",
-    "build:web": "pnpm --filter veritas-web build",
-    "lint": "pnpm -r lint",
-    "test": "pnpm -r test",
-    "clean": "find . -name node_modules -type d -exec rm -rf {} +"
-  },
-  "engines": {
-    "node": ">=20.0.0"
-  },
-  "packageManager": "pnpm@9.15.0",
-  "license": "MIT",
-  "dependencies": {
-    "@openzeppelin/contracts": "^5.6.1",
-    "cors": "^2.8.6",
-    "ethers": "^6.16.0",
-    "express": "^4.22.2",
-    "pg": "^8.20.0"
-  },
-  "devDependencies": {
-    "@nomicfoundation/hardhat-chai-matchers": "^3.0.0",
-    "@nomicfoundation/hardhat-ethers": "^4.0.11",
-    "@types/node": "^22.8.5",
-    "autoprefixer": "^10.4.20",
-    "chai": "^6.2.2",
-    "dotenv": "^17.4.2",
-    "hardhat": "^3.4.5",
-    "nodemon": "^3.1.14",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.16",
-    "typescript": "~5.8.0"
-  },
-  "type": "module"
+    "dev": "pnpm --filter veritas-web dev",
+    "build": "pnpm --filter veritas-web build",
+    "lint": "pnpm --filter veritas-web lint"
+  }
 }

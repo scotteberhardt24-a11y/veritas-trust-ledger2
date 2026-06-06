@@ -1,106 +1,137 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #06111f;
-  --foreground: #f8fafc;
+  --navy: #07111f;
+  --navy-light: #0f1c2e;
 
-  --card: rgba(10, 25, 47, 0.82);
-  --card-foreground: #f8fafc;
+  --gold: #d4af37;
+  --gold-soft: #f4d27a;
 
-  --popover: rgba(15, 23, 42, 0.96);
-  --popover-foreground: #f8fafc;
+  --red: #9b111e;
 
-  --primary: #0f4c81;
-  --primary-foreground: #ffffff;
-
-  --secondary: #132238;
-  --secondary-foreground: #f8fafc;
-
-  --muted: #172554;
-  --muted-foreground: #94a3b8;
-
-  --accent: #d4af37;
-  --accent-foreground: #06111f;
-
-  --destructive: #dc2626;
-  --destructive-foreground: #ffffff;
-
-  --border: rgba(255,255,255,0.08);
-  --input: rgba(255,255,255,0.06);
-  --ring: #2563eb;
-
-  --radius: 1.25rem;
+  --white: #ffffff;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
+html,
 body {
-  background:
-    radial-gradient(circle at top left, rgba(37,99,235,0.18), transparent 
-28%),
-    radial-gradient(circle at top right, rgba(212,175,55,0.12), 
-transparent 22%),
-    radial-gradient(circle at bottom, rgba(220,38,38,0.12), transparent 
-18%),
-    #06111f;
-
-  color: var(--foreground);
-  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
   overflow-x: hidden;
+
+  background:
+    radial-gradient(circle at top, rgba(212,175,55,0.15), transparent 
+30%),
+    radial-gradient(circle at bottom right, rgba(155,17,30,0.12), 
+transparent 30%),
+    linear-gradient(to bottom, #07111f, #0f1c2e);
+
+  color: white;
+  font-family: Inter, sans-serif;
 }
 
 * {
-  border-color: var(--border);
+  box-sizing: border-box;
 }
 
-.veritas-glass {
-  background: rgba(15, 23, 42, 0.72);
-  backdrop-filter: blur(18px);
+body::before {
+  content: "";
+
+  position: fixed;
+  inset: 0;
+
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+
+  background-size: 40px 40px;
+
+  pointer-events: none;
+}
+
+.glass {
+  background: rgba(255,255,255,0.06);
+
+  backdrop-filter: blur(25px);
+
   border: 1px solid rgba(255,255,255,0.08);
+
   box-shadow:
-    0 8px 32px rgba(0,0,0,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.04);
+    0 0 40px rgba(0,0,0,0.4),
+    0 0 80px rgba(212,175,55,0.08);
 }
 
-.veritas-gold-glow {
+.gold-glow {
   box-shadow:
-    0 0 15px rgba(212,175,55,0.25),
-    0 0 40px rgba(212,175,55,0.12);
-}
-
-.veritas-blue-glow {
-  box-shadow:
-    0 0 15px rgba(37,99,235,0.35),
-    0 0 40px rgba(37,99,235,0.18);
-}
-
-.veritas-red-glow {
-  box-shadow:
-    0 0 15px rgba(220,38,38,0.25),
-    0 0 40px rgba(220,38,38,0.12);
+    0 0 20px rgba(212,175,55,0.4),
+    0 0 60px rgba(212,175,55,0.15);
 }
 
 .veritas-title {
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-size: 4rem;
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: 0.12em;
 
-  background: linear-gradient(
-    to right,
-    #ffffff,
-    #d4af37,
-    #ffffff
-  );
-
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #d4af37;
 }
 
-.veritas-cursive {
-  font-family: "Times New Roman", serif;
-  font-style: italic;
-  letter-spacing: 0.08em;
+.auth-input {
+  width: 100%;
+
+  background: rgba(255,255,255,0.05);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  border-radius: 16px;
+
+  padding: 16px;
+
+  color: white;
+
+  outline: none;
+
+  transition: all 0.25s ease;
+}
+
+.auth-input:focus {
+  border-color: #d4af37;
+
+  box-shadow:
+    0 0 0 1px #d4af37,
+    0 0 20px rgba(212,175,55,0.25);
+}
+
+.auth-button {
+  width: 100%;
+
+  background: linear-gradient(
+    135deg,
+    #d4af37,
+    #f4d27a
+  );
+
+  color: #07111f;
+
+  border: none;
+
+  border-radius: 16px;
+
+  padding: 16px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.auth-button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 0 20px rgba(212,175,55,0.4),
+    0 0 50px rgba(212,175,55,0.2);
 }
