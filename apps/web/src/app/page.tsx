@@ -1,274 +1,81 @@
 "use client";
 
-import { motion } from "framer-motion";
+import Sidebar from "@/components/Sidebar";
+import Navbar from "@/components/navbar/Navbar";
+import DashboardCards from "@/components/dashboard/DashboardCards";
+import DisputePanel from "@/components/disputes/DisputePanel";
 
 export default function HomePage() {
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "40px",
-        position: "relative",
-      }}
-    >
-      <motion.div
-        animate={{
-          opacity: [0.4, 0.7, 0.4],
-          scale: [1, 1.08, 1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-        }}
-        style={{
-          position: "absolute",
-          width: 700,
-          height: 700,
-          borderRadius: "50%",
-          background: "rgba(212,175,55,0.08)",
-          filter: "blur(120px)",
-        }}
-      />
+    <main className="min-h-screen bg-[#050816] text-white">
+      <Sidebar />
+      <Navbar />
 
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 50,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 1,
-        }}
-        className="glass"
-        style={{
-          width: "100%",
-          maxWidth: 560,
-          borderRadius: 32,
-          padding: 48,
-          position: "relative",
-          zIndex: 2,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            textAlign: "center",
-            marginBottom: 40,
-          }}
-        >
-          <motion.img
-            animate={{
-              y: [0, -10, 0],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-            }}
-            src="/veritas-shield.png"
-            alt="VERITAS"
-            className="gold-glow"
-            style={{
-              width: 130,
-              marginBottom: 24,
-            }}
-          />
+      <div className="ml-[280px] pt-32">
+        <div className="p-10">
+          <div className="mb-12">
+            <h1 className="text-6xl font-black leading-tight">
+              Welcome to
+              <span className="ml-4 bg-gradient-to-r from-yellow-300 
+to-red-500 bg-clip-text text-transparent">
+                VERITAS
+              </span>
+            </h1>
 
-          <div className="veritas-title">
-            VERITAS
+            <p className="mt-5 max-w-3xl text-xl leading-9 text-white/60">
+              Advanced decentralized trust infrastructure with escrow,
+              identity verification, AI disputes, and secure contracts.
+            </p>
           </div>
 
-          <p
-            style={{
-              marginTop: 18,
-              fontSize: "1.05rem",
-              opacity: 0.82,
-              maxWidth: 420,
-              lineHeight: 1.7,
-            }}
-          >
-            Welcome to the next generation trust infrastructure platform.
-            Secure escrow. AI protection. Verified reputation systems.
-          </p>
-        </div>
+          <DashboardCards />
 
-        <div
-          style={{
-            display: "flex",
-            gap: 12,
-            marginBottom: 28,
-          }}
-        >
-          <button
-            style={{
-              flex: 1,
-              padding: 14,
-              borderRadius: 14,
-              border: "1px solid rgba(255,255,255,0.08)",
-              background: "rgba(255,255,255,0.08)",
-              color: "white",
-              fontWeight: 700,
-            }}
-          >
-            Sign In
-          </button>
+          <div className="mt-10 grid gap-8 xl:grid-cols-2">
+            <DisputePanel />
 
-          <button
-            style={{
-              flex: 1,
-              padding: 14,
-              borderRadius: 14,
-              border: "1px solid rgba(212,175,55,0.4)",
-              background: "rgba(212,175,55,0.12)",
-              color: "#d4af37",
-              fontWeight: 700,
-            }}
-          >
-            Sign Up
-          </button>
-        </div>
+            <div className="glass-card rounded-3xl p-8">
+              <h2 className="text-3xl font-black">
+                Live Trust Activity
+              </h2>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 18,
-          }}
-        >
-          <input
-            className="auth-input"
-            placeholder="Full Name"
-          />
+              <div className="mt-8 space-y-5">
+                <div className="rounded-2xl border border-white/10 
+bg-white/5 p-5">
+                  <p className="font-bold">
+                    Escrow Released
+                  </p>
 
-          <input
-            className="auth-input"
-            placeholder="Email Address"
-          />
+                  <p className="mt-2 text-white/50">
+                    $24,000 smart escrow payment completed
+                  </p>
+                </div>
 
-          <input
-            className="auth-input"
-            placeholder="Username"
-          />
+                <div className="rounded-2xl border border-white/10 
+bg-white/5 p-5">
+                  <p className="font-bold">
+                    Identity Verified
+                  </p>
 
-          <input
-            className="auth-input"
-            placeholder="Password"
-            type="password"
-          />
+                  <p className="mt-2 text-white/50">
+                    AI trust verification completed successfully
+                  </p>
+                </div>
 
-          <button className="auth-button">
-            ENTER VERITAS
-          </button>
-        </div>
+                <div className="rounded-2xl border border-white/10 
+bg-white/5 p-5">
+                  <p className="font-bold">
+                    Contract Signed
+                  </p>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: 22,
-            fontSize: 14,
-            opacity: 0.7,
-          }}
-        >
-          <span
-            style={{
-              cursor: "pointer",
-            }}
-          >
-            Forgot Password?
-          </span>
-
-          <span
-            style={{
-              cursor: "pointer",
-            }}
-          >
-            Forgot Username?
-          </span>
-        </div>
-
-        <div
-          style={{
-            marginTop: 36,
-            paddingTop: 28,
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            display: "flex",
-            justifyContent: "space-around",
-            textAlign: "center",
-          }}
-        >
-          <div>
-            <div
-              style={{
-                color: "#d4af37",
-                fontSize: 28,
-                fontWeight: 800,
-              }}
-            >
-              AI
-            </div>
-
-            <div
-              style={{
-                opacity: 0.65,
-                fontSize: 13,
-              }}
-            >
-              Protection
-            </div>
-          </div>
-
-          <div>
-            <div
-              style={{
-                color: "#d4af37",
-                fontSize: 28,
-                fontWeight: 800,
-              }}
-            >
-              24/7
-            </div>
-
-            <div
-              style={{
-                opacity: 0.65,
-                fontSize: 13,
-              }}
-            >
-              Escrow
-            </div>
-          </div>
-
-          <div>
-            <div
-              style={{
-                color: "#d4af37",
-                fontSize: 28,
-                fontWeight: 800,
-              }}
-            >
-              LIVE
-            </div>
-
-            <div
-              style={{
-                opacity: 0.65,
-                fontSize: 13,
-              }}
-            >
-              Verification
+                  <p className="mt-2 text-white/50">
+                    Blockchain-backed agreement secured
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </main>
   );
 }
